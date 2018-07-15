@@ -3,7 +3,6 @@ import com.orm.SugarRecord;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.List;
 
 
@@ -84,60 +83,6 @@ public class User extends SugarRecord<User> {
 
     public String getUsername() {
         return username;
-    }
-
-    public static JSONArray getUserByParseId(String parseid){
-        List<User> users = User.find(User.class,"parseid=?",parseid);
-        JSONArray userArray = new JSONArray();
-        for(int i = 0;i<users.size();i++)
-        {
-            User user = users.get(i);
-            try
-            {
-                userArray.put(user);
-
-            }
-            catch (Exception e){}
-        }
-        return userArray;
-    }
-
-    public static JSONArray getUserByUsername(String username){
-        List<User> users = User.find(User.class,"username=?",username);
-        JSONArray userArray = new JSONArray();
-        for(int i = 0;i<users.size();i++)
-        {
-            User user = users.get(i);
-            try
-            {
-                userArray.put(user);
-            }
-            catch (Exception e){}
-        }
-        return userArray;
-    }
-
-    public static JSONArray getAllParseIdNotSetUsers(){
-        List<User> users = User.find(User.class,"parseid=?","");
-        JSONArray userArray = new JSONArray();
-        for(int i = 0;i<users.size();i++)
-        {
-            User user = users.get(i);
-            try
-            {
-                userArray.put(user);
-            }
-            catch (Exception e){}
-        }
-        return userArray;
-    }
-
-    public static boolean checkUserExists(String username) {
-        JSONArray userArray = getUserByUsername(username);
-        if (userArray.length()>0){
-            return true;
-        }
-        return false;
     }
 }
 

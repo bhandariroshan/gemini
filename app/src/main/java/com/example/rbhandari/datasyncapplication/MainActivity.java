@@ -4,8 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.rbhandari.datasyncapplication.datamodels.User;
-import com.example.rbhandari.datasyncapplication.requesthandler.AuditHandler;
-import com.example.rbhandari.datasyncapplication.requesthandler.UserHandler;
+import com.example.rbhandari.datasyncapplication.datahandler.AuditHandler;
+import com.example.rbhandari.datasyncapplication.datahandler.UserHandler;
 
 import java.util.Date;
 
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         //        UserHandler.createAllLocalUsersToParse();
         try{
-            User user = (User) User.getUserByUsername("roshan").get(0);
+            User user = (User) UserHandler.getUserByUsername("roshan").get(0);
             Date date = new Date();
             Long data = new Long(0);
             //            AuditHandler auditHandler = new AuditHandler(user, data, "", "Audit 1",date, date);
