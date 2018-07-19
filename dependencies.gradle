@@ -1,0 +1,16 @@
+ext {
+
+    compiler = [
+            java  : JavaVersion.VERSION_1_8
+    ]
+
+    jUnitVersion = '4.12'
+    mockitoVersion = '2.13.+'
+    okHttp = '3.10.0'
+    android = [
+            compileSdk: 27
+    ]
+    dependencies =[
+         'com.android.tools.build:gradle:3.1.3'
+    ]
+}
