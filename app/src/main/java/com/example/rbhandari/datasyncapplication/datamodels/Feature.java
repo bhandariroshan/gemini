@@ -30,7 +30,7 @@ public class Feature extends SugarRecord<Feature> {
 
     public Feature(String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
                    String belongsTo, String dataType,
-                   String key, String valueString, Integer valueInt, Double valueDouble){
+                   String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated){
         this.parseId = parseId;
         this.formId = formId;
         this.belongsTo = belongsTo;
@@ -42,6 +42,8 @@ public class Feature extends SugarRecord<Feature> {
         this.valueString = valueString;
         this.valueInt = valueInt;
         this.valueDouble = valueDouble;
+        this.created = created;
+        this.updated = updated;
     }
 
     public void setParseId(String parseId) {

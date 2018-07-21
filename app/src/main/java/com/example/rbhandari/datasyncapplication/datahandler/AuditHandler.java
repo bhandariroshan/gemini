@@ -14,7 +14,7 @@ import com.example.rbhandari.datasyncapplication.requesthandler.ApiHandler;
 public class AuditHandler {
 
     private static String auditClassName = "AuditMain";
-    private static JSONObject auditData = new JSONObject();
+    private JSONObject auditData = new JSONObject();
 
     public AuditHandler(){
 

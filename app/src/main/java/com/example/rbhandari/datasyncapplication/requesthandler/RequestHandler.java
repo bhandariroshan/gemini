@@ -2,7 +2,9 @@ package com.example.rbhandari.datasyncapplication.requesthandler;
 
 import android.os.AsyncTask;
 import android.util.JsonReader;
+import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
 import okhttp3.MediaType;
@@ -21,20 +23,23 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
     private String apiKey;
     private String url;
     private String method;
-    private String className;
+    private OnEventListener<JSONObject> mCallBack;
+    public Exception mException;
 
     public RequestHandler(){
 
     }
 
     public RequestHandler(JSONObject jsonData, String appId,
-                          String apiKey, String url, String method, String className){
+                          String apiKey, String url, String method,
+                          OnEventListener callback){
         this.jsonData=jsonData;
         this.apiKey=apiKey;
         this.appId=appId;
         this.url=url;
         this.method=method;
-        this.className=className;
+        this.mCallBack=callback;
+
     }
 
     @Override
@@ -42,24 +47,35 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
         try{
             JSONObject response;
             RequestHandler example = this;
-            if (this.method != "post"){
+            if (this.method.toLowerCase().equals("get")){
                 response = example.get(url);
-                System.out.println(response);
 
             }
-            else{
+            else if (this.method.toLowerCase().equals("post")){
                 response = example.post(this.jsonData, this.appId, this.apiKey, this.url);
-                System.out.println(response);
+            }
+            else if (this.method.toLowerCase().equals("delete")){
+                response = example.delete(this.appId, this.apiKey, this.url);
+            }
+            else {
+                // For put request
+                response = example.put(this.jsonData, this.appId, this.apiKey, this.url);
             }
             return response;
         } catch (Exception e){
-            JSONObject exception = new JSONObject();
-            return exception;
+            Log.e("RequestHandler", "Error while creating background request.", e);
+            return new JSONObject();
         }
     }
 
     protected void onPostExecute(JSONObject result) {
-        ResponseHandler.route(jsonData, result, className, method);
+        if (mCallBack != null) {
+            if (mException == null) {
+                mCallBack.onSuccess(result);
+            } else {
+                mCallBack.onFailure(mException);
+            }
+        }
     }
 
     private JSONObject get(String url) throws IOException {
@@ -74,10 +90,11 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
         try (Response response = client.newCall(request).execute()) {
             JSONObject jsonResponse =  new JSONObject();
             try{
-                JSONObject data = new JSONObject(response.body().string());
                 jsonResponse.put("status", "success");
-                jsonResponse.put("response", data);
-            } catch (Exception e) {}
+                jsonResponse.put("response", response.body().string());
+            } catch (Exception e) {
+                Log.e("RequestHandler", "Error while creating json data in get request.", e);
+            }
             return jsonResponse;
         }
         catch (Exception e){
@@ -85,7 +102,9 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
             try{
                 exceptionResponse.put("status","fail");
                 exceptionResponse.put("message","Exception occurred while executing get.");
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+                Log.e("RequestHandler", "Error while error data in get request.", e);
+            }
             return exceptionResponse;
         }
     }
@@ -100,29 +119,93 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
                 .addHeader("X-Parse-REST-API-Key",apiKey)
                 .post(body)
                 .build();
+        JSONObject returnJSON = new JSONObject();
         try  {
             Response response = client.newCall(request).execute();
             String responseString = response.body().string();
-            JSONObject responseData = new JSONObject(responseString);
-            JSONObject returnJSON = new JSONObject();
             try{
                 returnJSON.put("status", "success");
-                returnJSON.put("response", responseData);
-            }catch (Exception e){}
+                returnJSON.put("response", responseString);
+            } catch (Exception e){
+                Log.e("RequestHandler", "Error while creating data for post request.", e);
+            }
+
             return returnJSON;
         } catch (Exception e){
             JSONObject exceptionResponse =  new JSONObject();
             try{
                 exceptionResponse.put("status","fail");
                 exceptionResponse.put("message","Exception occurred while executing post.");
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+                Log.e("RequestHandler", "Error while creating data for exception in post request.", e);
+            }
             return exceptionResponse;
         }
     }
 
-    public void run()
-            throws IOException {
-        RequestHandler requestHandler = this;
-        requestHandler.execute();
+    private JSONObject delete(String appId, String apiKey, String url) throws IOException {
+
+        Request request = new Request.Builder()
+                .url(url)
+                .header("User-Agent", "OkHttp Headers.java")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-Parse-Application-Id",appId)
+                .addHeader("X-Parse-REST-API-Key",apiKey)
+                .delete()
+                .build();
+        try  {
+            Response response = client.newCall(request).execute();
+            String responseString = response.body().string();
+            JSONObject returnJSON = new JSONObject();
+            try{
+                returnJSON.put("status", "success");
+                returnJSON.put("response", responseString);
+            }catch (Exception e){
+                Log.e("RequestHandler", "Error while creating data for delete request.", e);
+            }
+            return returnJSON;
+        } catch (Exception e){
+            JSONObject exceptionResponse =  new JSONObject();
+            try{
+                exceptionResponse.put("status","fail");
+                exceptionResponse.put("message","Exception occurred while executing delete.");
+            } catch (Exception ex) {
+                Log.e("RequestHandler", "Error while creating data for exception in delete request.", e);
+            }
+            return exceptionResponse;
+        }
+    }
+
+    private JSONObject put(JSONObject data, String appId, String apiKey, String url) throws IOException {
+        RequestBody body = RequestBody.create(JSON, data.toString());
+        Request request = new Request.Builder()
+                .url(url)
+                .header("User-Agent", "OkHttp Headers.java")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-Parse-Application-Id",appId)
+                .addHeader("X-Parse-REST-API-Key",apiKey)
+                .put(body)
+                .build();
+        try  {
+            Response response = client.newCall(request).execute();
+            String responseString = response.body().string();
+            JSONObject returnJSON = new JSONObject();
+            try{
+                returnJSON.put("status", "success");
+                returnJSON.put("response", responseString);
+            }catch (Exception e){
+                Log.e("RequestHandler", "Error while creating data for put request.", e);
+            }
+            return returnJSON;
+        } catch (Exception e){
+            JSONObject exceptionResponse =  new JSONObject();
+            try{
+                exceptionResponse.put("status","fail");
+                exceptionResponse.put("message","Exception occurred while executing put.");
+            } catch (Exception ex) {
+                Log.e("RequestHandler", "Error while creating data for exception in put request.", e);
+            }
+            return exceptionResponse;
+        }
     }
 }

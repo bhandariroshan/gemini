@@ -3,6 +3,7 @@ package com.example.rbhandari.datasyncapplication;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.rbhandari.datasyncapplication.datahandler.FeatureHandler;
 import com.example.rbhandari.datasyncapplication.datahandler.TypeHandler;
 import com.example.rbhandari.datasyncapplication.datahandler.ZoneHandler;
 import com.example.rbhandari.datasyncapplication.datamodels.User;
@@ -37,19 +38,34 @@ public class MainActivity extends AppCompatActivity {
             //            zoneHandler.createZoneParse();
             //            ZoneHandler.saveAllLocalZonesToParse();
 
-            TypeHandler typeHandler = new TypeHandler(
-                    "",
-                    "",
-                    Long.valueOf(1),
-                    Long.valueOf(1),
-                    "Type 1",
-                    "HVAC",
-                    new Date(),
-                    new Date()
+            //                        TypeHandler typeHandler = new TypeHandler(
+            //                                "",
+            //                                "",
+            //                                Long.valueOf(1),
+            //                                Long.valueOf(1),
+            //                                "Type 1",
+            //                                "HVAC",
+            //                                new Date(),
+            //                                new Date()
+            //                        );
+            //                        typeHandler.createLocalType();
+            //                        //            typeHandler.createTypeParse();
+            //                        TypeHandler.saveAllLocalTypesToParse();
+            FeatureHandler featureHandler = new FeatureHandler(
+                    "", "", Long.valueOf(1), Long.valueOf(1), Long.valueOf(1),Long.valueOf(1),
+                    "Person", "String",
+                    "Name", "Address", 0, 0.0,
+                    new Date(), new Date()
             );
-            typeHandler.createLocalType();
-            //            typeHandler.createTypeParse();
-            TypeHandler.saveAllLocalTypesToParse();
+            featureHandler.createFeatureAtLocal();
+            FeatureHandler featureHandler1 = new FeatureHandler(
+                    "","", Long.valueOf(1), Long.valueOf(1), Long.valueOf(1),Long.valueOf(1),
+                    "Roshan", "String",
+                    "Surname", "Bhandari", 0, 0.0, new Date(), new Date()
+            );
+            featureHandler1.createFeatureAtLocal();
+
+            FeatureHandler.saveAllLocalFeaturesToParse();
         } catch (Exception e) {
             System.out.println("Exception");
         }

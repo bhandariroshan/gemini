@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TypeHandler {
     private static String className = "TypeMain";
-    private static JSONObject typeData = new JSONObject();
+    private JSONObject typeData = new JSONObject();
 
     private JSONObject zoneData = new JSONObject();
 
