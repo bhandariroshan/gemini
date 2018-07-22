@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:name="com.orm.SugarApp">
         <meta-data android:name="DATABASE" android:value="newdb.db" />
-        <meta-data android:name="VERSION" android:value="10" />
+        <meta-data android:name="VERSION" android:value="11" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
 
         <activity android:name=".MainActivity">

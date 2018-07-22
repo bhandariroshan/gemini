@@ -22,6 +22,10 @@ public class TypeHandler {
         return userArray.length()>0;
     }
 
+    public JSONObject getTypeData() {
+        return typeData;
+    }
+
     public TypeHandler(String id, String parseId, Long zoneId, Long auditId, String name, String subType,
                        Date created, Date updated){
         try {
@@ -39,7 +43,7 @@ public class TypeHandler {
         }
     }
 
-    public void createLocalType(){
+    public void createTypeAtLocal(){
         String parseId;
         Long zoneId;
         Long auditId;
@@ -67,17 +71,15 @@ public class TypeHandler {
         }
     }
 
-    public void createTypeParse(){
-        ApiHandler apiHandler = new ApiHandler();
-        apiHandler.createParseObject(typeData, className);
+    public void createTypeAtParse(){
+        ApiHandler.createParseObject(typeData, className);
     }
 
     public void getTypeFromParse(String objectId){
-        ApiHandler apiHandler = new ApiHandler();
-        apiHandler.getParseObject(typeData, className, objectId);
+        ApiHandler.getParseObjects(typeData, className, objectId);
     }
 
-    public static void updateLocalType(String objectId, String id) {
+    public static void updateTypeAtLocal(String objectId, String id) {
         try{
             TypeClass type = (TypeClass) (TypeHandler.getTypeById(id)).get(0);
             type.setParseId(objectId);
@@ -89,6 +91,7 @@ public class TypeHandler {
 
     public static void saveAllLocalTypesToParse(){
         JSONArray types = TypeHandler.getAllParseIdNotSetTypes();
+        JSONArray data = new JSONArray();
         for (int i =0; i < types.length(); i++){
             try {
                 TypeClass type = (TypeClass) types.get(i);
@@ -102,11 +105,12 @@ public class TypeHandler {
                         type.getCreated(),
                         type.getUpdated()
                 );
-                typeHandler.createTypeParse();
+                data.put(typeHandler.getTypeData());
             } catch (Exception e){
                 System.out.println("Exception occurred while saving.");
             }
         }
+        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod());
     }
 
     public static JSONArray getTypeByParseId(String parseid){

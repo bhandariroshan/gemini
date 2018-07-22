@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class TypeClass extends SugarRecord<TypeClass>{
     private String parseId;
+    private String userName;
     private Long zoneId;
     private Long auditId;
     private String name;

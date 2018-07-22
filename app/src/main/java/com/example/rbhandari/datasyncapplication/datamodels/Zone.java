@@ -7,6 +7,7 @@ import java.util.Date;
 public class Zone extends SugarRecord<Zone>{
     private String parseId;
     private Long auditId;
+    private String username;
 
     private String name;
     private String type;
@@ -17,13 +18,26 @@ public class Zone extends SugarRecord<Zone>{
 
     }
 
-    public Zone(String parseId, String name, String type, Long auditId, Date created, Date updated ){
+    public Zone(String parseId, String username, String name, String type, Long auditId, Date created, Date updated ){
         this.parseId = parseId;
+        this.username = username;
         this.name = name;
         this.type = type;
         this.auditId = auditId;
         this.created = created;
         this.updated = updated;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setAuditId(Long auditId) {
+        this.auditId = auditId;
     }
 
     public String getParseId() {

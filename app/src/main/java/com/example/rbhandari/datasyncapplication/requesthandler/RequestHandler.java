@@ -52,14 +52,14 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
 
             }
             else if (this.method.toLowerCase().equals("post")){
-                response = example.post(this.jsonData, this.appId, this.apiKey, this.url);
+                response = example.post();
             }
             else if (this.method.toLowerCase().equals("delete")){
-                response = example.delete(this.appId, this.apiKey, this.url);
+                response = example.delete();
             }
             else {
                 // For put request
-                response = example.put(this.jsonData, this.appId, this.apiKey, this.url);
+                response = example.put();
             }
             return response;
         } catch (Exception e){
@@ -79,13 +79,21 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
     }
 
     private JSONObject get(String url) throws IOException {
+        if (jsonData.has("where")){
+            try {
+                url = url + "?where=" + jsonData.get("where").toString();
+            } catch (Exception e){
+                url = url;
+            }
+        }
+
         Request request = new Request.Builder()
                 .url(url)
                 .header("User-Agent", "OkHttp Headers.java")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("X-Parse-Application-Id",appId)
                 .addHeader("X-Parse-REST-API-Key",apiKey)
-                .build();
+                    .build();
 
         try (Response response = client.newCall(request).execute()) {
             JSONObject jsonResponse =  new JSONObject();
@@ -109,14 +117,14 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
         }
     }
 
-    private JSONObject post(JSONObject data, String appId, String apiKey, String url) throws IOException {
-        RequestBody body = RequestBody.create(JSON, data.toString());
+    private JSONObject post() throws IOException {
+        RequestBody body = RequestBody.create(JSON, jsonData.toString());
         Request request = new Request.Builder()
                 .url(url)
                 .header("User-Agent", "OkHttp Headers.java")
                 .addHeader("Content-Type", "application/json")
-                .addHeader("X-Parse-Application-Id",appId)
-                .addHeader("X-Parse-REST-API-Key",apiKey)
+                .addHeader("X-Parse-Application-Id", appId)
+                .addHeader("X-Parse-REST-API-Key", apiKey)
                 .post(body)
                 .build();
         JSONObject returnJSON = new JSONObject();
@@ -143,7 +151,7 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
         }
     }
 
-    private JSONObject delete(String appId, String apiKey, String url) throws IOException {
+    private JSONObject delete() throws IOException {
 
         Request request = new Request.Builder()
                 .url(url)
@@ -176,8 +184,8 @@ public class RequestHandler extends AsyncTask <String,Void,JSONObject>{
         }
     }
 
-    private JSONObject put(JSONObject data, String appId, String apiKey, String url) throws IOException {
-        RequestBody body = RequestBody.create(JSON, data.toString());
+    private JSONObject put() throws IOException {
+        RequestBody body = RequestBody.create(JSON, jsonData.toString());
         Request request = new Request.Builder()
                 .url(url)
                 .header("User-Agent", "OkHttp Headers.java")

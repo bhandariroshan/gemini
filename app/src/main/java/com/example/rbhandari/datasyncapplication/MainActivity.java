@@ -18,56 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        UserHandler userHandler = new UserHandler("roshan", "123", "brishi98@gmail.com",
-                "Roshan", "Bhandari", "");
-        userHandler.createLocalUser();
-        //        userHandler.createUserParse();
-        //        userHandler.getUserFromParse("mPZ2OZ8gMb");
-
-        //        UserHandler.createAllLocalUsersToParse();
-        try{
-            /*User user = (User) UserHandler.getUserByUsername("roshan").get(0);
-            Date date = new Date();
-            Long data = new Long(0);
-            //            AuditHandler auditHandler = new AuditHandler(user, data, "", "Audit 1",date, date);
-            //            auditHandler.createLocalAudit();
-            AuditHandler.createAllLocalAuditToParse();*/
-
-            //            ZoneHandler zoneHandler = new ZoneHandler("1","","Zone 1","", new Long(1), new Date(), new Date());
-            //            zoneHandler.createLocalZone();
-            //            zoneHandler.createZoneParse();
-            //            ZoneHandler.saveAllLocalZonesToParse();
-
-            //                        TypeHandler typeHandler = new TypeHandler(
-            //                                "",
-            //                                "",
-            //                                Long.valueOf(1),
-            //                                Long.valueOf(1),
-            //                                "Type 1",
-            //                                "HVAC",
-            //                                new Date(),
-            //                                new Date()
-            //                        );
-            //                        typeHandler.createLocalType();
-            //                        //            typeHandler.createTypeParse();
-            //                        TypeHandler.saveAllLocalTypesToParse();
-            FeatureHandler featureHandler = new FeatureHandler(
-                    "", "", Long.valueOf(1), Long.valueOf(1), Long.valueOf(1),Long.valueOf(1),
-                    "Person", "String",
-                    "Name", "Address", 0, 0.0,
-                    new Date(), new Date()
-            );
-            featureHandler.createFeatureAtLocal();
-            FeatureHandler featureHandler1 = new FeatureHandler(
-                    "","", Long.valueOf(1), Long.valueOf(1), Long.valueOf(1),Long.valueOf(1),
-                    "Roshan", "String",
-                    "Surname", "Bhandari", 0, 0.0, new Date(), new Date()
-            );
-            featureHandler1.createFeatureAtLocal();
-
-            FeatureHandler.saveAllLocalFeaturesToParse();
-        } catch (Exception e) {
-            System.out.println("Exception");
-        }
+        AuditHandler.syncAllUserAuditsFromParse("roshanbhandari");
+        ZoneHandler.syncAllZonesFromParse("roshanbhandari");
     }
 }

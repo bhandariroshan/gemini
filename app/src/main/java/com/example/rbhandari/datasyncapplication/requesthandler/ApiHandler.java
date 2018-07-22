@@ -60,7 +60,7 @@ public class ApiHandler {
         return updateObjectRequestMethod;
     }
 
-    public void createParseObject(final JSONObject data, final String classname){
+    public static void createParseObject(final JSONObject data, final String classname){
         String createObjectUrl = parseApiRoot + classPath + classname;
 
         try{
@@ -89,7 +89,7 @@ public class ApiHandler {
         }
     }
 
-    public void updateParseObject(final JSONObject data, String objectID, final String classname){
+    public static void updateParseObject(final JSONObject data, String objectID, final String classname){
         String updateObjectUrl = parseApiRoot + classPath + classname + "/" + objectID;
         try{
             RequestHandler requestHandler = new RequestHandler(
@@ -117,7 +117,7 @@ public class ApiHandler {
         }
     }
 
-    public void deleteParseObject(final String objectID, String classname){
+    public static void deleteParseObject(final String objectID, String classname){
         String deleteObjecteUrl = parseApiRoot + classPath + classname + "/" + objectID;
 
         try{
@@ -145,12 +145,17 @@ public class ApiHandler {
         }
     }
 
-    public void getParseObject(final JSONObject data, final String classname, String objectId){
-        String createUrl = parseApiRoot + classPath + classname + "/" + objectId;
+    public static void getParseObjects(final JSONObject query, final String classname, String objectId){
+        String createUrl;
+        if (objectId.equals("")){
+            createUrl = parseApiRoot + classPath + classname;
+        } else {
+            createUrl = parseApiRoot + classPath + classname + "/" + objectId;;
+        }
 
         try{
             RequestHandler requestHandler = new RequestHandler(
-                    data,
+                    query,
                     getApplicationId(),
                     getMasterKey(),
                     createUrl,
@@ -159,7 +164,7 @@ public class ApiHandler {
                         @Override
                         public void onSuccess(JSONObject result) {
                             ResponseHandler responseHandler = new ResponseHandler();
-                            responseHandler.route(data, result, classname, getRetrieveObjectRequestMethod());
+                            responseHandler.route(query, result, classname, getRetrieveObjectRequestMethod());
                         }
 
                         @Override

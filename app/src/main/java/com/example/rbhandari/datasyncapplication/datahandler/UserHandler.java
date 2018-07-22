@@ -1,5 +1,7 @@
 package com.example.rbhandari.datasyncapplication.datahandler;
 
+import android.util.Log;
+
 import com.example.rbhandari.datasyncapplication.datamodels.User;
 import com.example.rbhandari.datasyncapplication.requesthandler.RequestHandler;
 import com.example.rbhandari.datasyncapplication.requesthandler.ApiHandler;
@@ -30,7 +32,7 @@ public class UserHandler {
             userData.put("phone",phone);
             userData.put("last_name", last_name);
         }catch (JSONException e){
-            System.out.println("Exception occurred.");
+            Log.e("UserHandler", "Exception occurred while setting user data.", e);
         }
     }
 
@@ -60,14 +62,16 @@ public class UserHandler {
         }
     }
 
+    public JSONObject getUserData() {
+        return userData;
+    }
+
     private void createUserParse(){
-        ApiHandler apiHandler = new ApiHandler();
-        apiHandler.createParseObject(userData, userClassName);
+        ApiHandler.createParseObject(userData, userClassName);
     }
 
     public void getUserFromParse(String objectId){
-        ApiHandler apiHandler = new ApiHandler();
-        apiHandler.getParseObject(userData, userClassName, objectId);
+        ApiHandler.getParseObjects(userData, userClassName, objectId);
     }
 
     public static void updateLocalUser(String objectId, String username) {
@@ -76,12 +80,13 @@ public class UserHandler {
             user.setParseid(objectId);
             user.save();
         } catch (Exception e) {
-            System.out.println("Exception");
+            Log.e("UserHandler", "Exception occurred while updating user.", e);
         }
     }
 
     public static void createAllLocalUsersToParse(){
         JSONArray users = UserHandler.getAllParseIdNotSetUsers();
+        JSONArray data = new JSONArray();
         for (int i =0; i < users.length(); i++){
             JSONObject jsonObject = new JSONObject();
             try {
@@ -94,10 +99,12 @@ public class UserHandler {
                         user.getLastName(),
                         user.getPhone()
                  );
-                userHandler.createUserParse();
-            } catch (Exception e){}
-
+                data.put(userHandler.getUserData());
+            } catch (Exception e){
+                Log.e("UserHandler", "Exception occurred while creating json data.", e);
+            }
         }
+        ApiHandler.doBatchOperation(data, userClassName, ApiHandler.getBatchOperationRequestMethod());
     }
 
     public static JSONArray getUserByParseId(String parseid){
@@ -111,7 +118,9 @@ public class UserHandler {
                 userArray.put(user);
 
             }
-            catch (Exception e){}
+            catch (Exception e){
+                Log.e("UserHandler", "Exception occurred while getting user in getUserByParseId.", e);
+            }
         }
         return userArray;
     }
@@ -127,10 +136,23 @@ public class UserHandler {
                 userArray.put(user);
             }
             catch (Exception e){
-                System.out.println("Exception occurred");
+                Log.e("UserHandler", "Exception occurred while getting user in getUserByUsername.", e);
             }
         }
         return userArray;
+    }
+
+    public static void syncUserFromParse(String username){
+        try{
+            JSONObject query = new JSONObject();
+            JSONObject parameter = new JSONObject();
+            parameter.put("username", username);
+            query.put("where", parameter);
+            ApiHandler.getParseObjects(query, userClassName, "");
+
+        } catch (Exception e) {
+            Log.e("UserHandler", "Exception while creating where query for request.",e);
+        }
     }
 
     private static JSONArray getAllParseIdNotSetUsers(){
@@ -143,8 +165,32 @@ public class UserHandler {
             {
                 userArray.put(user);
             }
-            catch (Exception e){}
+            catch (Exception e){
+                Log.e("UserHandler", "Exception occurred while getting user in getAllParseIdNotSetUsers.", e);
+            }
         }
         return userArray;
+    }
+
+    public static void saveOrUpdateUserFromParse(JSONObject userData) {
+        User user;
+        try{
+            String username =  userData.get("objectId").toString();
+            user = (User) UserHandler.getUserByUsername(username).get(0);
+        } catch (Exception e) {
+            user = new User();
+        }
+
+        try {
+            user.setUsername(userData.get("username").toString());
+            user.setParseid(userData.get("objectId").toString());
+            user.setEmail(userData.get("email").toString());
+            user.setLastName(userData.get("last_name").toString());
+            user.setFirstName(userData.get("first_name").toString());
+            user.setPassword(userData.get("password").toString());
+            user.save();
+        } catch (Exception e) {
+            System.out.println("Exception");
+        }
     }
 }

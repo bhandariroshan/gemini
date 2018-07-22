@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public class Audit extends SugarRecord<Audit> {
-    private User user;
+    private String userName;
     private String name;
     private String parseId;
     private Date created;
@@ -25,16 +25,16 @@ public class Audit extends SugarRecord<Audit> {
         this.updated = updatedAt;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getName() {
         return name;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserName() {
+        return this.userName;
     }
 
     public Date getCreated() {
@@ -57,8 +57,8 @@ public class Audit extends SugarRecord<Audit> {
 
     }
 
-    public Audit(User user, String name, Date createdAt, Date updatedAt, String parseId){
-        this.user=user;
+    public Audit(String username, String name, Date createdAt, Date updatedAt, String parseId){
+        this.userName=userName;
         this.name=name;
         this.created=createdAt;
         this.updated=updatedAt;

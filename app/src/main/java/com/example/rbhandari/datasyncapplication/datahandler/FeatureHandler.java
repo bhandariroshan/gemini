@@ -84,13 +84,11 @@ public class FeatureHandler {
     }
 
     public void createFeatureAtParse(){
-        ApiHandler apiHandler = new ApiHandler();
-        apiHandler.createParseObject(featureData, className);
+        ApiHandler.createParseObject(featureData, className);
     }
 
     public void getFeatureFromParse(String objectId){
-        ApiHandler apiHandler = new ApiHandler();
-        apiHandler.getParseObject(featureData, className, objectId);
+        ApiHandler.getParseObjects(featureData, className, objectId);
     }
 
     public static void updateFeatureAtLocal(String objectId, String id) {
