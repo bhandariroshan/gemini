@@ -12,6 +12,7 @@ public class Audit extends SugarRecord<Audit> {
     private String parseId;
     private Date created;
     private Date updated;
+    private Boolean isUpdated;
 
     public void setCreated(Date createdAt) {
         this.created = createdAt;

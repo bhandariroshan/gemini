@@ -1,5 +1,7 @@
 package com.example.rbhandari.datasyncapplication.datahandler;
 
+import android.util.Log;
+
 import com.example.rbhandari.datasyncapplication.datamodels.Feature;
 import com.example.rbhandari.datasyncapplication.datamodels.TypeClass;
 import com.example.rbhandari.datasyncapplication.requesthandler.ApiHandler;
@@ -14,10 +16,11 @@ public class FeatureHandler {
     private static String className = "FeatureMain";
     private JSONObject featureData = new JSONObject();
 
-    public FeatureHandler(String id, String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
+    public FeatureHandler(String username, String id, String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
                           String belongsTo, String dataType,
                           String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated){
         try {
+            featureData.put("username", username);
             featureData.put("id", id);
             featureData.put("parseId", parseId);
             featureData.put("auditId", auditId);
@@ -44,6 +47,7 @@ public class FeatureHandler {
     }
 
     public void createFeatureAtLocal(){
+        String username;
         String parseId;
         Long zoneId;
         Long auditId;
@@ -59,6 +63,7 @@ public class FeatureHandler {
         Date updated;
 
         try{
+            username = featureData.get("username").toString();
             parseId = featureData.get("parseId").toString();
             zoneId = (Long) featureData.get("zoneId");
             auditId = (Long) featureData.get("auditId");
@@ -73,7 +78,7 @@ public class FeatureHandler {
             created = (Date) featureData.get("created");
             updated = (Date) featureData.get("updated");
 
-            Feature feature = new Feature(parseId, auditId, zoneId, typeId, formId,
+            Feature feature = new Feature(username, parseId, auditId, zoneId, typeId, formId,
                     belongsTo, dataType,
                     key, valueString, valueInt, valueDouble, created, updated);
             feature.save();
@@ -101,13 +106,14 @@ public class FeatureHandler {
         }
     }
 
-    public static void saveAllLocalFeaturesToParse(){
+    public static void syncAllLocalFeaturesToParse(){
         JSONArray features = FeatureHandler.getAllParseIdNotSetFeatures();
         JSONArray dataArray = new JSONArray();
         for (int i =0; i < features.length(); i++){
             try {
                 Feature feature = (Feature) features.get(i);
                 FeatureHandler featureHandler = new FeatureHandler(
+                        feature.getUsername(),
                         feature.getId().toString(),
                         feature.getParseId(),
                         feature.getAuditId(),
@@ -183,4 +189,62 @@ public class FeatureHandler {
         return typeArray;
     }
 
+    public static void syncAllFeaturesFromParse(String username) {
+        try{
+            JSONObject query = new JSONObject();
+            JSONObject parameter = new JSONObject();
+            parameter.put("username", username);
+            query.put("where", parameter);
+            ApiHandler.getParseObjects(query, className, "");
+
+        } catch (Exception e) {
+            Log.e("FeatureHandler", "Exception while creating where query for request.",e);
+        }
+    }
+
+    public static void saveOrUpdateFeatureFromParse(JSONObject jsonData) {
+        Feature feature;
+        try{
+            String parseId =  jsonData.get("objectId").toString();
+            feature = (Feature) FeatureHandler.getFeatureByParseId(parseId).get(0);
+        } catch (Exception e) {
+            feature = new Feature();
+        }
+
+        try {
+            feature.setId(Long.valueOf(jsonData.get("auditId").toString()));
+            feature.setParseId(jsonData.get("objectId").toString());
+            feature.setUsername(jsonData.get("username").toString());
+
+            feature.setFormId(Long.valueOf(jsonData.get("formId").toString()));
+            feature.setZoneId(Long.valueOf(jsonData.get("zoneId").toString()));
+            feature.setTypeId(Long.valueOf(jsonData.get("typeId").toString()));
+            feature.setBelongsTo(jsonData.get("belongsTo").toString());
+            feature.setDataType(jsonData.get("dataType").toString());
+
+            feature.setKey(jsonData.get("key").toString());
+            feature.setValueString(jsonData.get("valueString").toString());
+            try{
+                feature.setValueInt((Integer) jsonData.get("valueInt"));
+            } catch (Exception e) {}
+
+            try {
+                feature.setValueDouble((Double) jsonData.get("valueDouble"));
+            } catch (Exception e) {}
+
+            try{
+                feature.setCreated(new Date(jsonData.get("created").toString()));
+            } catch (Exception e) {
+                feature.setCreated(new Date());
+            }
+            try {
+                feature.setUpdated(new Date(jsonData.get("updated").toString()));
+            } catch (Exception e) {
+                feature.setUpdated(new Date());
+            }
+            feature.save();
+        } catch (Exception e) {
+            System.out.println("Exception");
+        }
+    }
 }

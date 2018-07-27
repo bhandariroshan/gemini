@@ -1,5 +1,8 @@
 package com.example.rbhandari.datasyncapplication.datahandler;
 
+import android.util.Log;
+
+import com.example.rbhandari.datasyncapplication.datamodels.Audit;
 import com.example.rbhandari.datasyncapplication.datamodels.TypeClass;
 import com.example.rbhandari.datasyncapplication.datamodels.Zone;
 import com.example.rbhandari.datasyncapplication.requesthandler.ApiHandler;
@@ -26,9 +29,10 @@ public class TypeHandler {
         return typeData;
     }
 
-    public TypeHandler(String id, String parseId, Long zoneId, Long auditId, String name, String subType,
+    public TypeHandler(String userName, String id, String parseId, Long zoneId, Long auditId, String name, String subType,
                        Date created, Date updated){
         try {
+            typeData.put("username", userName);
             typeData.put("id", id);
             typeData.put("parseId",parseId);
             typeData.put("zoneId",zoneId);
@@ -44,6 +48,7 @@ public class TypeHandler {
     }
 
     public void createTypeAtLocal(){
+        String userName;
         String parseId;
         Long zoneId;
         Long auditId;
@@ -53,6 +58,7 @@ public class TypeHandler {
         Date updated;
 
         try{
+            userName = typeData.get("userName").toString();
             parseId = typeData.get("parseId").toString();
             zoneId = (Long) typeData.get("zoneId");
             auditId = (Long) typeData.get("auditId");
@@ -63,7 +69,7 @@ public class TypeHandler {
             created = (Date) typeData.get("created");
             updated = (Date) typeData.get("updated");
 
-            TypeClass type = new TypeClass(parseId, zoneId, auditId, name, subType, created, updated);
+            TypeClass type = new TypeClass(userName, parseId, zoneId, auditId, name, subType, created, updated);
             type.save();
 
         } catch (Exception e) {
@@ -89,13 +95,14 @@ public class TypeHandler {
         }
     }
 
-    public static void saveAllLocalTypesToParse(){
+    public static void syncAllLocalTypesToParse(){
         JSONArray types = TypeHandler.getAllParseIdNotSetTypes();
         JSONArray data = new JSONArray();
         for (int i =0; i < types.length(); i++){
             try {
                 TypeClass type = (TypeClass) types.get(i);
                 TypeHandler typeHandler = new TypeHandler(
+                        type.getUserName(),
                         type.getId().toString(),
                         type.getParseId(),
                         type.getZoneId(),
@@ -164,4 +171,41 @@ public class TypeHandler {
         return typeArray;
     }
 
+    public static void syncAllTypesFromParse(String username) {
+        try{
+            JSONObject query = new JSONObject();
+            JSONObject parameter = new JSONObject();
+            parameter.put("username", username);
+            query.put("where", parameter);
+            ApiHandler.getParseObjects(query, className, "");
+
+        } catch (Exception e) {
+            Log.e("TypeHandler", "Exception while creating where query for request.",e);
+        }
+    }
+
+    public static void saveOrUpdateTypeFromParse(JSONObject jsonData) {
+        TypeClass typeClass;
+        try{
+            String parseId =  jsonData.get("objectId").toString();
+            typeClass = (TypeClass) TypeHandler.getTypeByParseId(parseId).get(0);
+        } catch (Exception e) {
+            typeClass = new TypeClass();
+        }
+
+        try {
+            typeClass.setAuditId(Long.valueOf(jsonData.get("auditId").toString()));
+            typeClass.setParseId(jsonData.get("objectId").toString());
+            typeClass.setUserName(jsonData.get("username").toString());
+            typeClass.setParseId(jsonData.get("objectId").toString());
+            typeClass.setName(jsonData.get("name").toString());
+            typeClass.setSubType(jsonData.get("subType").toString());
+            typeClass.setZoneId(Long.valueOf(jsonData.get("zoneId").toString()));
+            typeClass.setCreated(new Date(jsonData.get("created").toString()));
+            typeClass.setUpdated(new Date(jsonData.get("updated").toString()));
+            typeClass.save();
+        } catch (Exception e) {
+            System.out.println("Exception");
+        }
+    }
 }

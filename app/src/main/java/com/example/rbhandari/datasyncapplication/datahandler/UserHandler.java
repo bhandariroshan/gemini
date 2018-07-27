@@ -36,6 +36,23 @@ public class UserHandler {
         }
     }
 
+    public static JSONArray getOneUser() {
+        List<User> users = User.find(User.class,"");
+        JSONArray userArray = new JSONArray();
+        for(int i = 0;i<users.size();i++)
+        {
+            User user = users.get(i);
+            try
+            {
+                userArray.put(user);
+            }
+            catch (Exception e){
+                Log.e("UserHandler", "Exception occurred while getting user in getUserByUsername.", e);
+            }
+        }
+        return userArray;
+    }
+
     public void createLocalUser(){
         String username = "";
         String email="";

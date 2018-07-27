@@ -14,6 +14,7 @@ public class User extends SugarRecord<User> {
     private String lastName;
     private String password;
     private String phone;
+    private Boolean isUpdated;
 
     public User(){
     }

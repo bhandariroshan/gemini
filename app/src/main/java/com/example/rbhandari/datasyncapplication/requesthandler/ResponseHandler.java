@@ -7,9 +7,12 @@ import com.example.rbhandari.datasyncapplication.datahandler.TypeHandler;
 import com.example.rbhandari.datasyncapplication.datahandler.UserHandler;
 import com.example.rbhandari.datasyncapplication.datahandler.AuditHandler;
 import com.example.rbhandari.datasyncapplication.datahandler.ZoneHandler;
+import com.example.rbhandari.datasyncapplication.datamodels.Feature;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 
 public class ResponseHandler {
     public void route(JSONObject requestData, JSONObject responseData, String className, String method){
@@ -33,8 +36,13 @@ public class ResponseHandler {
                     } else if (className.toLowerCase().equals("auditmain")) {
                         AuditHandler.saveOrUpdateAuditFromParse(jsonData);
                     } else if (className.toLowerCase().equals("zonemain")) {
-                        ZoneHandler.saveOrUpdateZomeFromParse(jsonData);
+                        ZoneHandler.saveOrUpdateZoneFromParse(jsonData);
+                    } else if (className.toLowerCase().equals("typemain")) {
+                        TypeHandler.saveOrUpdateTypeFromParse(jsonData);
+                    } else if (className.toLowerCase().equals("featuremain")) {
+                        FeatureHandler.saveOrUpdateFeatureFromParse(jsonData);
                     }
+
                 }
 
             } catch (Exception e) {
@@ -119,6 +127,7 @@ public class ResponseHandler {
             }
         }
     }
+
     public void routeBatchOpData(JSONArray requestData, JSONObject responseData, String className, String method){
         try{
             JSONArray data = new JSONArray(responseData.get("response").toString());

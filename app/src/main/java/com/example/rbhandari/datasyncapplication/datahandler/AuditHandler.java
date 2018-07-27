@@ -83,7 +83,7 @@ public class AuditHandler {
         }
     }
 
-    public static void createAllLocalAuditToParse(){
+    public static void syncAllLocalAuditToParse(){
         JSONArray audits = AuditHandler.getAllParseIdNotSetAudits();
         JSONArray data = new JSONArray();
         for (int i =0; i < audits.length(); i++){

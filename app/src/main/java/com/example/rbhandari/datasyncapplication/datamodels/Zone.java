@@ -8,6 +8,7 @@ public class Zone extends SugarRecord<Zone>{
     private String parseId;
     private Long auditId;
     private String username;
+    private Boolean isUpdated;
 
     private String name;
     private String type;

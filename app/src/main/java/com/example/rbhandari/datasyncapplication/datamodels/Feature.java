@@ -6,11 +6,13 @@ import java.util.Date;
 
 
 public class Feature extends SugarRecord<Feature> {
+    private String username;
     private String parseId;
     private Long formId;
     private Long auditId;
     private Long zoneId;
     private Long typeId;
+    private Boolean isUpdated;
 
     private  String belongsTo;
     private  String dataType;
@@ -28,9 +30,10 @@ public class Feature extends SugarRecord<Feature> {
 
     }
 
-    public Feature(String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
+    public Feature(String username, String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
                    String belongsTo, String dataType,
                    String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated){
+        this.username = username;
         this.parseId = parseId;
         this.formId = formId;
         this.belongsTo = belongsTo;
@@ -44,6 +47,14 @@ public class Feature extends SugarRecord<Feature> {
         this.valueDouble = valueDouble;
         this.created = created;
         this.updated = updated;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setParseId(String parseId) {

@@ -18,7 +18,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AuditHandler.syncAllUserAuditsFromParse("roshanbhandari");
-        ZoneHandler.syncAllZonesFromParse("roshanbhandari");
+//        AuditHandler.syncAllUserAuditsFromParse("roshanbhandari"); // correct
+//        ZoneHandler.syncAllZonesFromParse("roshanbhandari"); // correct
+//        TypeHandler.syncAllTypesFromParse("roshanbhandari"); //correct
+        FeatureHandler.syncAllFeaturesFromParse("roshanbhandari");
     }
 }

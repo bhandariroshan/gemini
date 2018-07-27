@@ -88,7 +88,7 @@ public class ZoneHandler {
         }
     }
 
-    public static void saveAllLocalZonesToParse(){
+    public static void syncAllLocalZonesToParse(){
         JSONArray zones = ZoneHandler.getAllParseIdNotSetZones();
         JSONArray data = new JSONArray();
         for (int i =0; i < zones.length(); i++){
@@ -177,7 +177,7 @@ public class ZoneHandler {
         }
     }
 
-    public static void saveOrUpdateZomeFromParse(JSONObject jsonObject) {
+    public static void saveOrUpdateZoneFromParse(JSONObject jsonObject) {
         Zone zone;
         try{
             String parseId =  jsonObject.get("objectId").toString();
