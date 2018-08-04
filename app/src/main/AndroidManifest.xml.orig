@@ -13,8 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="com.orm.SugarApp">
+<<<<<<< HEAD
+        <meta-data android:name="DATABASE" android:value="newdb.db" />
+        <meta-data android:name="VERSION" android:value="9" />
+=======
         <meta-data android:name="DATABASE" android:value="data.db" />
         <meta-data android:name="VERSION" android:value="2" />
+>>>>>>> 54568480834a08384d4b4dc1a5b21a12b8b73668
         <meta-data android:name="QUERY_LOG" android:value="true" />
 
         <activity android:name=".MainActivity">
