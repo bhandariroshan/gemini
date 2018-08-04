@@ -18,7 +18,7 @@ public class FeatureHandler {
 
     public FeatureHandler(String username, String id, String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
                           String belongsTo, String dataType,
-                          String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated){
+                          String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated, Boolean isUpdated){
         try {
             featureData.put("username", username);
             featureData.put("id", id);
@@ -36,6 +36,7 @@ public class FeatureHandler {
 
             featureData.put("created", created);
             featureData.put("updated", updated);
+            featureData.put("isUpdated", isUpdated);
 
         } catch (Exception e){
             System.out.println("Error saving json data.");
@@ -61,6 +62,7 @@ public class FeatureHandler {
         Double valueDouble;
         Date created;
         Date updated;
+        Boolean isUpdated;
 
         try{
             username = featureData.get("username").toString();
@@ -77,10 +79,11 @@ public class FeatureHandler {
             formId = (Long) featureData.get("formId");
             created = (Date) featureData.get("created");
             updated = (Date) featureData.get("updated");
+            isUpdated = (Boolean) featureData.get("isUpdated");
 
             Feature feature = new Feature(username, parseId, auditId, zoneId, typeId, formId,
                     belongsTo, dataType,
-                    key, valueString, valueInt, valueDouble, created, updated);
+                    key, valueString, valueInt, valueDouble, created, updated, isUpdated);
             feature.save();
 
         } catch (Exception e) {
@@ -127,7 +130,8 @@ public class FeatureHandler {
                         feature.getValueInt(),
                         feature.getValueDouble(),
                         feature.getCreated(),
-                        feature.getUpdated()
+                        feature.getUpdated(),
+                        feature.getIsUpdated()
                 );
                 // featureHandler.createFeatureAtParse();
                 dataArray.put(featureHandler.getFeatureData());
@@ -135,7 +139,7 @@ public class FeatureHandler {
                 System.out.println("Exception occurred while saving.");
             }
         }
-        ApiHandler.doBatchOperation(dataArray, className, ApiHandler.getBatchOperationRequestMethod());
+        ApiHandler.doBatchOperation(dataArray, className, ApiHandler.getBatchOperationRequestMethod(), false);
     }
 
     public static JSONArray getFeatureByParseId(String parseid){
@@ -246,5 +250,54 @@ public class FeatureHandler {
         } catch (Exception e) {
             System.out.println("Exception");
         }
+    }
+
+    private static JSONArray getAllRecentlyUpdatedFeatures(){
+        List<Feature> features = Feature.find(Feature.class,"parse_id is not NULL and parse_id !='' and isUpdated=1","");
+        JSONArray featureArray = new JSONArray();
+        for(int i = 0;i<features.size();i++)
+        {
+            Feature feature = features.get(i);
+            try
+            {
+                featureArray.put(feature);
+            }
+            catch (Exception e){
+                System.out.println("Zone could not be found.");
+            }
+        }
+        return featureArray;
+    }
+
+    public static void saveAllFeatureChangesToParse() {
+        JSONArray features = FeatureHandler.getAllRecentlyUpdatedFeatures();
+        JSONArray data = new JSONArray();
+        for (int i =0; i < features.length(); i++){
+            try {
+                Feature feature = (Feature) features.get(i);
+                FeatureHandler featureHandler = new FeatureHandler(
+                        feature.getUsername(),
+                        feature.getId().toString(),
+                        feature.getParseId(),
+                        feature.getAuditId(),
+                        feature.getZoneId(),
+                        feature.getTypeId(),
+                        feature.getFormId(),
+                        feature.getBelongsTo(),
+                        feature.getDataType(),
+                        feature.getKey(),
+                        feature.getValueString(),
+                        feature.getValueInt(),
+                        feature.getValueDouble(),
+                        feature.getCreated(),
+                        feature.getUpdated(),
+                        feature.getIsUpdated()
+                );
+                data.put(featureHandler.getFeatureData());
+            } catch (Exception e){
+                System.out.println("Exception occurred while saving.");
+            }
+        }
+        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod(), true);
     }
 }

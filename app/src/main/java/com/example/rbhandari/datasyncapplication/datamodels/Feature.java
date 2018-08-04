@@ -32,7 +32,7 @@ public class Feature extends SugarRecord<Feature> {
 
     public Feature(String username, String parseId, Long auditId, Long zoneId, Long typeId,Long formId,
                    String belongsTo, String dataType,
-                   String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated){
+                   String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated, Boolean isUpdated){
         this.username = username;
         this.parseId = parseId;
         this.formId = formId;
@@ -47,6 +47,15 @@ public class Feature extends SugarRecord<Feature> {
         this.valueDouble = valueDouble;
         this.created = created;
         this.updated = updated;
+        this.isUpdated = isUpdated;
+    }
+
+    public void setUpdated(Boolean updated) {
+        this.isUpdated = updated;
+    }
+
+    public Boolean getIsUpdated(){
+        return this.isUpdated;
     }
 
     public void setUsername(String username) {

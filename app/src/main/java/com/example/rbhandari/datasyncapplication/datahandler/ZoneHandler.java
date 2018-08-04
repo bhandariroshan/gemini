@@ -3,6 +3,8 @@ package com.example.rbhandari.datasyncapplication.datahandler;
 import android.util.Log;
 
 import com.example.rbhandari.datasyncapplication.datamodels.Audit;
+import com.example.rbhandari.datasyncapplication.datamodels.Feature;
+import com.example.rbhandari.datasyncapplication.datamodels.TypeClass;
 import com.example.rbhandari.datasyncapplication.datamodels.User;
 import com.example.rbhandari.datasyncapplication.datamodels.Zone;
 import com.example.rbhandari.datasyncapplication.requesthandler.ApiHandler;
@@ -23,7 +25,8 @@ public class ZoneHandler {
         return userArray.length()>0;
     }
 
-    public ZoneHandler(String id, String username, String parseId, String name, String type, Long auditId, Date created, Date updated){
+    public ZoneHandler(String id, String username, String parseId, String name,
+                       String type, Long auditId, Date created, Date updated, Boolean isUpdated){
         try {
             zoneData.put("username", username);
             zoneData.put("id", id);
@@ -33,6 +36,7 @@ public class ZoneHandler {
             zoneData.put("auditId", auditId);
             zoneData.put("created", created);
             zoneData.put("updated", updated);
+            zoneData.put("isUpdated", isUpdated);
 
         }catch (JSONException e){
             Log.e("ZoneHandler", "Exception occurred while getting setting zone data.", e);
@@ -52,6 +56,7 @@ public class ZoneHandler {
         Long auditId;
         Date created;
         Date updated;
+        Boolean isUpdated;
 
         try{
             parseId = zoneData.get("parseId").toString();
@@ -61,8 +66,9 @@ public class ZoneHandler {
             auditId = (Long) zoneData.get("auditId");
             created = (Date) zoneData.get("created");
             updated = (Date) zoneData.get("updated");
+            isUpdated = (Boolean) zoneData.get("isUpdated");
 
-            Zone zone = new Zone(parseId, userName, name, type, auditId, created, updated);
+            Zone zone = new Zone(parseId, userName, name, type, auditId, created, updated, isUpdated);
             zone.save();
 
         } catch (Exception e) {
@@ -102,14 +108,15 @@ public class ZoneHandler {
                         zone.getType(),
                         zone.getAuditId(),
                         zone.getCreated(),
-                        zone.getUpdated()
+                        zone.getUpdated(),
+                        zone.getIsUpdated()
                 );
                 data.put(zoneHandler.getZoneData());
             } catch (Exception e){
                 Log.e("ZoneHandler", "Exception occurred while getting creating json data.", e);
             }
         }
-        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod());
+        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod(), false);
     }
 
     public static JSONArray getZoneByParseId(String parseid){
@@ -201,5 +208,47 @@ public class ZoneHandler {
             System.out.println("Exception");
         }
 
+    }
+
+    public static void saveAllZoneChangesToParse() {
+        JSONArray zones = ZoneHandler.getAllRecentlyUpdatedZones();
+        JSONArray data = new JSONArray();
+        for (int i =0; i < zones.length(); i++){
+            try {
+                Zone zone = (Zone) zones.get(i);
+                ZoneHandler zoneHandler = new ZoneHandler(
+                        zone.getId().toString(),
+                        zone.getUsername(),
+                        zone.getParseId(),
+                        zone.getName(),
+                        zone.getType(),
+                        zone.getAuditId(),
+                        zone.getCreated(),
+                        zone.getUpdated(),
+                        zone.getIsUpdated()
+                );
+                data.put(zoneHandler.getZoneData());
+            } catch (Exception e){
+                System.out.println("Exception occurred while saving.");
+            }
+        }
+        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod(), true);
+    }
+
+    private static JSONArray getAllRecentlyUpdatedZones() {
+        List<Zone> zones = Zone.find(Zone.class,"parse_id is not NULL and parse_id !='' and isUpdated=1","");
+        JSONArray zoneArray = new JSONArray();
+        for(int i = 0;i<zones.size();i++)
+        {
+            Zone zone = zones.get(i);
+            try
+            {
+                zoneArray.put(zone);
+            }
+            catch (Exception e){
+                System.out.println("Zone could not be found.");
+            }
+        }
+        return zoneArray;
     }
 }

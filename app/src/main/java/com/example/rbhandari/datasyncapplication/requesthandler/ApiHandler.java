@@ -179,16 +179,23 @@ public class ApiHandler {
         }
     }
 
-    private static JSONObject createBatchOperationData(String className, String methodType, JSONArray data){
+    private static JSONObject createBatchOperationData(String className, String methodType, JSONArray data, Boolean updateObject){
         JSONArray jsonArray = new JSONArray();
         JSONObject returnData = new JSONObject();
 
         for (int i =0; i<data.length(); i++){
             try {
                 JSONObject jsonObject = new JSONObject();
+                if (updateObject){
+                    jsonObject.put("method", ApiHandler.getUpdateObjectRequestMethod());
+                    String parseId = ((JSONObject) data.get(i)).get("parseId").toString();
+                    jsonObject.put("path", "/parse/classes/"+className + "/" + parseId);
+                } else{
+                    jsonObject.put("method", methodType);
+                    jsonObject.put("path", "/parse/classes/"+className);
+                }
+
                 jsonObject.put("body", data.get(i));
-                jsonObject.put("method", methodType);
-                jsonObject.put("path", "/parse/classes/"+className);
                 jsonArray.put(jsonObject);
             } catch (Exception e){
                 Log.e("APIHandler", "Error while creating Batch Operation data.", e);
@@ -203,11 +210,12 @@ public class ApiHandler {
         return returnData;
     }
 
-    public static void doBatchOperation(final JSONArray data, final String classname, String actionType){
+    public static void doBatchOperation(final JSONArray data, final String classname, String actionType, Boolean updateObject){
         JSONObject postData = ApiHandler.createBatchOperationData(
                 classname,
                 actionType,
-                data
+                data,
+                updateObject
         );
         String createUrl = parseApiRoot + bathOperationPath;
         try{

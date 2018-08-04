@@ -1,7 +1,12 @@
-package com.example.rbhandari.datasyncapplication.datahandler;
+package com.example.rbhandari.datasyncapplication;
 
 import android.os.AsyncTask;
 
+import com.example.rbhandari.datasyncapplication.datahandler.AuditHandler;
+import com.example.rbhandari.datasyncapplication.datahandler.FeatureHandler;
+import com.example.rbhandari.datasyncapplication.datahandler.TypeHandler;
+import com.example.rbhandari.datasyncapplication.datahandler.UserHandler;
+import com.example.rbhandari.datasyncapplication.datahandler.ZoneHandler;
 import com.example.rbhandari.datasyncapplication.datamodels.TypeClass;
 import com.example.rbhandari.datasyncapplication.datamodels.User;
 
@@ -52,7 +57,17 @@ public class SyncHandler extends AsyncTask<String,Void,String>{
         }
     }
 
-    public static String backAllUpdatesToParse(){
-        return "";
+    public static String saveAllUpdatesToParse(){
+        JSONArray users = UserHandler.getOneUser();
+        try{
+            String username = ((User) users.get(0)).getUsername();
+            AuditHandler.saveAllUserAuditsChangesToParse(); // correct
+            ZoneHandler.saveAllZoneChangesToParse(); // correct
+            TypeHandler.saveAllTypeChangesToParse(); //correct
+            FeatureHandler.saveAllFeatureChangesToParse();
+            return "Successfully completed backing up updates";
+        } catch (Exception e) {
+            return "Exception occurred while creating backup";
+        }
     }
 }

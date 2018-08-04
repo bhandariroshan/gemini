@@ -8,6 +8,9 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+
+import com.example.rbhandari.datasyncapplication.datamodels.Feature;
+import com.example.rbhandari.datasyncapplication.datamodels.TypeClass;
 import com.example.rbhandari.datasyncapplication.datamodels.User;
 import com.example.rbhandari.datasyncapplication.datamodels.Audit;
 import com.example.rbhandari.datasyncapplication.requesthandler.ApiHandler;
@@ -22,7 +25,7 @@ public class AuditHandler {
 
     }
 
-    public AuditHandler(String userName, Long auditId, String parseId, String name, Date createdAt, Date updatedAt){
+    public AuditHandler(String userName, Long auditId, String parseId, String name, Date createdAt, Date updatedAt, Boolean isUpdated){
         try {
             Date date = new Date();
 
@@ -33,6 +36,7 @@ public class AuditHandler {
             auditData.put("auditId", auditId);
             auditData.put("parseId", parseId);
             auditData.put("name", name);
+            auditData.put("isUpdated", isUpdated);
 
         }catch (JSONException e){
             Log.e("AuditHandler", "Exception occurred while creating initializing handler data.", e);
@@ -40,7 +44,7 @@ public class AuditHandler {
     }
 
     public JSONObject getAuditData() {
-        return auditData;
+        return this.auditData;
     }
 
     public void createLocalAudit(){
@@ -50,6 +54,7 @@ public class AuditHandler {
         String name="";
         Date createdAt;
         Date updatedAt;
+        Boolean isUpdated;
 
         try{
             userName = auditData.get("userName").toString();
@@ -58,7 +63,9 @@ public class AuditHandler {
             name = auditData.get("name").toString();
             createdAt = (Date) auditData.get("localCreatedAt");
             updatedAt = (Date) auditData.get("localUpdatedAt");
-            Audit audit = new Audit(userName, name, createdAt, updatedAt, parseId);
+            isUpdated = (Boolean) auditData.get("isUpdated");
+
+            Audit audit = new Audit(userName, name, createdAt, updatedAt, parseId, isUpdated);
             audit.save();
         } catch (Exception e) {
             Log.e("AuditHandler", "Exception occurred while initializing data.", e);
@@ -96,7 +103,8 @@ public class AuditHandler {
                         audit.getParseId(),
                         audit.getName(),
                         audit.getCreated(),
-                        audit.getUpdated()
+                        audit.getUpdated(),
+                        audit.getIsUpdated()
                 );
                 data.put(auditHandler.getAuditData());
             } catch (Exception e){
@@ -104,7 +112,7 @@ public class AuditHandler {
             }
 
         }
-        ApiHandler.doBatchOperation(data, auditClassName, ApiHandler.getBatchOperationRequestMethod());
+        ApiHandler.doBatchOperation(data, auditClassName, ApiHandler.getBatchOperationRequestMethod(), false);
     }
 
     public static JSONArray getAuditByParseId(String parseid){
@@ -194,4 +202,45 @@ public class AuditHandler {
             System.out.println("Exception");
         }
     }
+
+    public static void saveAllUserAuditsChangesToParse() {
+        JSONArray audits = AuditHandler.getAllRecentlyUpdatedAudits();
+        JSONArray data = new JSONArray();
+        for (int i =0; i < audits.length(); i++){
+            try {
+                Audit audit = (Audit) audits.get(i);
+                AuditHandler auditHandler = new AuditHandler(
+                        audit.getUserName(),
+                        audit.getId(),
+                        audit.getParseId(),
+                        audit.getName(),
+                        audit.getCreated(),
+                        audit.getUpdated(),
+                        audit.getIsUpdated()
+                );
+                data.put(auditHandler.getAuditData());
+            } catch (Exception e){
+                System.out.println("Exception occurred while saving.");
+            }
+        }
+        ApiHandler.doBatchOperation(data, auditClassName, ApiHandler.getBatchOperationRequestMethod(), true);
+    }
+
+    private static JSONArray getAllRecentlyUpdatedAudits() {
+        List<Audit> audits = Audit.find(Audit.class,"parse_id is not NULL and parse_id !='' and is_updated=1","");
+        JSONArray auditArray = new JSONArray();
+        for(int i = 0;i<audits.size();i++)
+        {
+            Audit audit = audits.get(i);
+            try
+            {
+                auditArray.put(audit);
+            }
+            catch (Exception e){
+                System.out.println("Audit could not be found.");
+            }
+        }
+        return auditArray;
+    }
+
 }

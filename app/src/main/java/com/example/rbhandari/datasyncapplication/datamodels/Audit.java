@@ -54,15 +54,24 @@ public class Audit extends SugarRecord<Audit> {
         return parseId;
     }
 
+    public void setIsUpdated(Boolean updated) {
+        this.isUpdated = updated;
+    }
+
+    public Boolean getIsUpdated(){
+        return this.isUpdated;
+    }
+
     public Audit(){
 
     }
 
-    public Audit(String username, String name, Date createdAt, Date updatedAt, String parseId){
-        this.userName=userName;
+    public Audit(String username, String name, Date createdAt, Date updatedAt, String parseId, Boolean isUpdated){
+        this.userName=username;
         this.name=name;
         this.created=createdAt;
         this.updated=updatedAt;
         this.parseId=parseId;
+        this.isUpdated=isUpdated;
     }
 }

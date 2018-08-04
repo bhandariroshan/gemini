@@ -22,7 +22,7 @@ public class TypeClass extends SugarRecord<TypeClass>{
     }
 
     public TypeClass(String userName, String parseId, Long zoneId, Long auditId, String name, String subType,
-                Date created, Date updated){
+                Date created, Date updated, Boolean isUpdated){
         this.userName = userName;
         this.parseId=parseId;
         this.zoneId=zoneId;
@@ -31,6 +31,15 @@ public class TypeClass extends SugarRecord<TypeClass>{
         this.subType=subType;
         this.created=created;
         this.updated=updated;
+        this.isUpdated=isUpdated;
+    }
+
+    public void setUpdated(Boolean updated) {
+        this.isUpdated = updated;
+    }
+
+    public Boolean getIsUpdated(){
+        return this.isUpdated;
     }
 
     public void setUserName(String userName) {

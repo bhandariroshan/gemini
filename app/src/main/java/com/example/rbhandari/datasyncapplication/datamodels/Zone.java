@@ -19,7 +19,7 @@ public class Zone extends SugarRecord<Zone>{
 
     }
 
-    public Zone(String parseId, String username, String name, String type, Long auditId, Date created, Date updated ){
+    public Zone(String parseId, String username, String name, String type, Long auditId, Date created, Date updated, Boolean isUpdated){
         this.parseId = parseId;
         this.username = username;
         this.name = name;
@@ -27,6 +27,7 @@ public class Zone extends SugarRecord<Zone>{
         this.auditId = auditId;
         this.created = created;
         this.updated = updated;
+        this.isUpdated = isUpdated;
     }
 
     public String getUsername() {
@@ -87,5 +88,13 @@ public class Zone extends SugarRecord<Zone>{
 
     public Date getUpdated() {
         return updated;
+    }
+
+    public void setIsUpdated(Boolean updated) {
+        this.isUpdated = updated;
+    }
+
+    public Boolean getIsUpdated(){
+        return this.isUpdated;
     }
 }

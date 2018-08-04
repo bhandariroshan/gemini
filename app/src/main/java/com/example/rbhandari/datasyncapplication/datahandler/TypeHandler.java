@@ -30,7 +30,7 @@ public class TypeHandler {
     }
 
     public TypeHandler(String userName, String id, String parseId, Long zoneId, Long auditId, String name, String subType,
-                       Date created, Date updated){
+                       Date created, Date updated, Boolean isUpdated){
         try {
             typeData.put("username", userName);
             typeData.put("id", id);
@@ -41,6 +41,7 @@ public class TypeHandler {
             typeData.put("name", name);
             typeData.put("created", created);
             typeData.put("updated", updated);
+            typeData.put("isUpdated", isUpdated);
 
         }catch (JSONException e){
             System.out.println("Exception Occurred in Constructor.");
@@ -56,6 +57,7 @@ public class TypeHandler {
         String subType;
         Date created;
         Date updated;
+        Boolean isUpdated;
 
         try{
             userName = typeData.get("userName").toString();
@@ -69,7 +71,9 @@ public class TypeHandler {
             created = (Date) typeData.get("created");
             updated = (Date) typeData.get("updated");
 
-            TypeClass type = new TypeClass(userName, parseId, zoneId, auditId, name, subType, created, updated);
+            isUpdated = (Boolean) typeData.get("isUpdated");
+
+            TypeClass type = new TypeClass(userName, parseId, zoneId, auditId, name, subType, created, updated, isUpdated);
             type.save();
 
         } catch (Exception e) {
@@ -110,14 +114,15 @@ public class TypeHandler {
                         type.getName(),
                         type.getSubType(),
                         type.getCreated(),
-                        type.getUpdated()
+                        type.getUpdated(),
+                        type.getIsUpdated()
                 );
                 data.put(typeHandler.getTypeData());
             } catch (Exception e){
                 System.out.println("Exception occurred while saving.");
             }
         }
-        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod());
+        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod(), false);
     }
 
     public static JSONArray getTypeByParseId(String parseid){
@@ -149,6 +154,23 @@ public class TypeHandler {
             }
             catch (Exception e){
                 System.out.println("Type could not be found.");
+            }
+        }
+        return typeArray;
+    }
+
+    private static JSONArray getAllRecentlyUpdatedTypes(){
+        List<TypeClass> types = TypeClass.find(TypeClass.class,"parse_id is not NULL and parse_id !='' and isUpdated=1","");
+        JSONArray typeArray = new JSONArray();
+        for(int i = 0;i<types.size();i++)
+        {
+            TypeClass type = types.get(i);
+            try
+            {
+                typeArray.put(type);
+            }
+            catch (Exception e){
+                System.out.println("Zone could not be found.");
             }
         }
         return typeArray;
@@ -208,4 +230,31 @@ public class TypeHandler {
             System.out.println("Exception");
         }
     }
+
+    public static void saveAllTypeChangesToParse() {
+        JSONArray types = TypeHandler.getAllRecentlyUpdatedTypes();
+        JSONArray data = new JSONArray();
+        for (int i =0; i < types.length(); i++){
+            try {
+                TypeClass type = (TypeClass) types.get(i);
+                TypeHandler typeHandler = new TypeHandler(
+                        type.getUserName(),
+                        type.getId().toString(),
+                        type.getParseId(),
+                        type.getZoneId(),
+                        type.getAuditId(),
+                        type.getName(),
+                        type.getSubType(),
+                        type.getCreated(),
+                        type.getUpdated(),
+                        type.getIsUpdated()
+                );
+                data.put(typeHandler.getTypeData());
+            } catch (Exception e){
+                System.out.println("Exception occurred while saving.");
+            }
+        }
+        ApiHandler.doBatchOperation(data, className, ApiHandler.getBatchOperationRequestMethod(), true);
+    }
+
 }
