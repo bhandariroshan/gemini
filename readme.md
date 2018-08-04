@@ -25,13 +25,17 @@ This app helps sync data to and from Android Local Database to Parser Server.
 We can directly use Synchandler class to sync data to and fro between android device and parse server.
 Following methods are available in the SyncHandler class:
 
+
 - createBackupToParse: This method saves all the newly created data in feature, type, audit and zone model to the parse server
+
 from com.example.rbhandari.datasyncapplication import SyncHandler
 SyncHandler.createBackupToParse()
 
 - loadBackupFromParse: This method can be used to created data in feature, type, audit and zone model from the data in parse server
+
 from com.example.rbhandari.datasyncapplication import SyncHandler
 SyncHandler.loadBackupFromParse()
+
 
 - saveAllUpdatesToParse: This method can be used to save changes in feature, type, audit and zone model from the android database to the data in parse server
 from com.example.rbhandari.datasyncapplication import SyncHandler
