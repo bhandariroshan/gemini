@@ -28,19 +28,30 @@ Following methods are available in the SyncHandler class:
 
 - createBackupToParse: This method saves all the newly created data in feature, type, audit and zone model to the parse server
 
-  ``` from com.example.rbhandari.datasyncapplication import SyncHandler
-  SyncHandler.createBackupToParse() ``` 
+  ``` 
+  
+  from com.example.rbhandari.datasyncapplication import SyncHandler
+  SyncHandler.createBackupToParse() 
+  
+  ``` 
 
 - loadBackupFromParse: This method can be used to created data in feature, type, audit and zone model from the data in parse server
 
-  ``` from com.example.rbhandari.datasyncapplication import SyncHandler
-  SyncHandler.loadBackupFromParse() ```
+  ``` 
+  from com.example.rbhandari.datasyncapplication import SyncHandler
+  SyncHandler.loadBackupFromParse() 
+  
+  ```
 
 
 - saveAllUpdatesToParse: This method can be used to save changes in feature, type, audit and zone model from the android database to the data in parse server
 
-  ``` from com.example.rbhandari.datasyncapplication import SyncHandler
-  SyncHandler.saveAllUpdatesToParse() ```
+  ``` 
+  
+  from com.example.rbhandari.datasyncapplication import SyncHandler
+  SyncHandler.saveAllUpdatesToParse() 
+  
+  ```
 
 
 ## Prerequisites to use the SyncHandler Class ##
