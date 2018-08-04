@@ -30,7 +30,7 @@ Following methods are available in the SyncHandler class:
 
   ``` 
   
-  from com.example.rbhandari.datasyncapplication import SyncHandler
+  import com.example.rbhandari.datasyncapplication.SyncHandler
   SyncHandler.createBackupToParse() 
   
   ``` 
@@ -38,7 +38,7 @@ Following methods are available in the SyncHandler class:
 - loadBackupFromParse: This method can be used to created data in feature, type, audit and zone model from the data in parse server
 
   ``` 
-  from com.example.rbhandari.datasyncapplication import SyncHandler
+  import com.example.rbhandari.datasyncapplication.SyncHandler
   SyncHandler.loadBackupFromParse() 
   
   ```
@@ -48,7 +48,7 @@ Following methods are available in the SyncHandler class:
 
   ``` 
   
-  from com.example.rbhandari.datasyncapplication import SyncHandler
+  import com.example.rbhandari.datasyncapplication.SyncHandler
   SyncHandler.saveAllUpdatesToParse() 
   
   ```
