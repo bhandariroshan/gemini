@@ -1,0 +1,8 @@
+id,parseId,auditId,username,name,type,created,updated,isUpdated
+1,,1,roshanbhandari,Zone 1,Heating,,,0
+2,,1,roshanbhandari,Zone 2,Cooling,,,0
+3,,1,roshanbhandari,Zone 3,,,,0
+4,,2,roshanbhandari,zone 1,Lightening,,,0
+5,,2,roshanbhandari,zone 2,Heating,,,0
+6,,3,roshanbhandari,zone 1,Cooling,,,0
+7,,3,roshanbhandari,zone 2,Lightening,,,0
