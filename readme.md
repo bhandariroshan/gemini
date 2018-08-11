@@ -57,4 +57,3 @@ Following methods are available in the SyncHandler class:
 ## Prerequisites to use the SyncHandler Class ##
 - Every audits, features, zones and types are linked to user, so please make sure user is created and associated with audit model
 - After every update, please make sure the isUpdated flag is turned on, so that updates can be synced to the server
-
