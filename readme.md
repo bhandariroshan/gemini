@@ -11,11 +11,11 @@ This app helps sync data to and from Android Local Database to Parser Server.
   - zone: model for zone
 
  - datahandler: handler for models, has different logics on top of corresponding data models
-   - audithandler: handler for audit model
-   - featurehandler: handler for audit model
-   - typeclasshandler: handler for typeclass model
-   - userhandler: handler for user model
-   - zonehandler: handler for zone model
+   - audithandler: handler for audit model, provides create, update and get methods for the audit table
+   - featurehandler: handler for audit model, provides create, update and get methods for the feature table
+   - typeclasshandler: handler for typeclass model, provides create, update and get methods for the typeclass table
+   - userhandler: handler for user model, provides create, update and get methods for the user table
+   - zonehandler: handler for zone model, provides create, update and get methods for the zone table
 
 - requesthandler: communicates to and from from android to parse server
    - requesthandler: creates get, put, post, delete request to provided url
