@@ -53,20 +53,20 @@ Following methods are available in the SyncHandler class:
  
  - Creating Audit Locally
  
-   ``` 
+  ``` 
     AuditHandler auditHandler = new AuditHandler(
-          "roshanbhandari",
-          Long.valueOf(1),
-          "",
-          "Audit ****",
-          new Date(),
-          new Date(),
-          false
+        "roshanbhandari",
+        Long.valueOf(1),
+        "",
+        "Audit ****",
+        new Date(),
+        new Date(),
+        false
     );
     auditHandler.createLocalAudit();
 
   ```
- 
+  
 - Creating Zone Locally
   
   ``` 
