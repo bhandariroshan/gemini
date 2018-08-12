@@ -17,8 +17,10 @@ This app helps sync data to and from Android Local Database to Parser Server.
    - userhandler: handler for user model
    - zonehandler: handler for zone model
 
-- requesthandler
-   - audithandler: handler for audit model
+- requesthandler: communicates to and from from android to parse server
+   - requesthandler: creates get, put, post, delete request to provided url
+   - requesthandler : creates data and url for required behaviour and triggers requesthandler for required action
+   - responsehandler: all response from parse server is landed here, we can control required behavior of response here and do necessary actions such as update local database based on response of server
 
 ## Using the App ##
 
