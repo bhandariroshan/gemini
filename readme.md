@@ -51,6 +51,39 @@ Following methods are available in the SyncHandler class:
 
   ``` 
  
+ - Creating Audit Locally
+   ``` 
+  AuditHandler auditHandler = new AuditHandler(
+        "roshanbhandari",
+        Long.valueOf(1),
+        "",
+        "Audit ****",
+        new Date(),
+        new Date(),
+        false
+  );
+  auditHandler.createLocalAudit();
+
+  ```
+ 
+- Creating Zone Locally
+  
+  ``` 
+  ZoneHandler zoneHandler = new ZoneHandler(
+          "",
+          "roshanbhandari",
+          "",
+          "zone 1",
+          "",
+          Long.valueOf(1),
+          new Date(),
+          new Date(),
+          false
+  );
+  zoneHandler.createLocalZone();
+
+  ```
+  
 - createBackupToParse: This method saves all the newly created data in feature, type, audit and zone model to the parse server
 
   ``` 
