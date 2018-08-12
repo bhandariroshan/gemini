@@ -139,7 +139,9 @@ Following methods are available in the SyncHandler class:
   ``` 
 
     import com.example.rbhandari.datasyncapplication.SyncHandler
-    SyncHandler.createBackupToParse() 
+    SyncHandler syncHandler = new SyncHandler();
+    syncHandler.setAction("createbackuptoparse");
+    syncHandler.execute();
 
   ``` 
 
@@ -147,7 +149,9 @@ Following methods are available in the SyncHandler class:
 
   ``` 
     import com.example.rbhandari.datasyncapplication.SyncHandler
-    SyncHandler.loadBackupFromParse() 
+    SyncHandler syncHandler = new SyncHandler();
+    syncHandler.setAction("createbackupfromparse");
+    syncHandler.execute();
 
   ```
 
@@ -157,10 +161,13 @@ Following methods are available in the SyncHandler class:
   ``` 
 
     import com.example.rbhandari.datasyncapplication.SyncHandler
-    SyncHandler.saveAllUpdatesToParse() 
+    SyncHandler syncHandler = new SyncHandler();
+    syncHandler.setAction("backupallupdatestoparse");
+    syncHandler.execute();
 
   ```
 
 ## Prerequisites to use the SyncHandler Class ##
 - Every audits, features, zones and types are linked to user, so please make sure user is created and associated with audit model
-- After every update, please make sure the isUpdated flag is turned on, so that updates can be synced to the server
+- After every update, please make sure the isUpdated flag is turned on, so that updates can be synced to the server.
+
