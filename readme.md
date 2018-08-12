@@ -55,13 +55,13 @@ Following methods are available in the SyncHandler class:
  
   ``` 
     AuditHandler auditHandler = new AuditHandler(
-        "roshanbhandari",
-        Long.valueOf(1),
-        "",
-        "Audit ****",
-        new Date(),
-        new Date(),
-        false
+      "roshanbhandari",
+      Long.valueOf(1),
+      "",
+      "Audit ****",
+      new Date(),
+      new Date(),
+      false
     );
     auditHandler.createLocalAudit();
 
@@ -71,15 +71,15 @@ Following methods are available in the SyncHandler class:
   
   ``` 
     ZoneHandler zoneHandler = new ZoneHandler(
-            "",
-            "roshanbhandari",
-            "",
-            "zone 1",
-            "",
-            Long.valueOf(1),
-            new Date(),
-            new Date(),
-            false
+          "",
+          "roshanbhandari",
+          "",
+          "zone 1",
+          "",
+          Long.valueOf(1),
+          new Date(),
+          new Date(),
+          false
     );
     zoneHandler.createLocalZone();
 
@@ -106,12 +106,11 @@ Following methods are available in the SyncHandler class:
 - saveAllUpdatesToParse: This method can be used to save changes in feature, type, audit and zone model from the android database to the data in parse server
 
   ``` 
-  
+
     import com.example.rbhandari.datasyncapplication.SyncHandler
     SyncHandler.saveAllUpdatesToParse() 
 
   ```
-
 
 ## Prerequisites to use the SyncHandler Class ##
 - Every audits, features, zones and types are linked to user, so please make sure user is created and associated with audit model
