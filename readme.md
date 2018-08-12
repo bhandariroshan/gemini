@@ -25,7 +25,32 @@ This app helps sync data to and from Android Local Database to Parser Server.
 We can directly use Synchandler class to sync data to and fro between android device and parse server.
 Following methods are available in the SyncHandler class:
 
+- Creating User using UserHandler in Android
+ ``` 
+ 
+ import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
+ UserHandler userHandler = new UserHandler(
+        "roshanbhandari",
+        "password1234",
+        "brishi98@gmail.com",
+        "roshan",
+        "bhandari",
+        "9808166147"
+);
+userHandler.createLocalUser();
+        
+ 
+ ```
+ 
+- Saving Locally created user to Parse
 
+ ``` 
+
+import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
+userHandler.createUserToParse();
+
+ ``` 
+ 
 - createBackupToParse: This method saves all the newly created data in feature, type, audit and zone model to the parse server
 
   ``` 
