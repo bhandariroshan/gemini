@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ZoneHandler {
     public ZoneHandler(String id, String username, String parseId, String name,
                        String type, Long auditId, Date created, Date updated, Boolean isUpdated){
         try {
-            zoneData.put("username", username);
+            zoneData.put("userName", username);
             zoneData.put("id", id);
             zoneData.put("parseId",parseId);
             zoneData.put("name", name);
@@ -50,7 +51,6 @@ public class ZoneHandler {
     public void createLocalZone(){
         String parseId="";
         String userName="";
-        String id = "";
         String name = "";
         String type="";
         Long auditId;
@@ -60,7 +60,7 @@ public class ZoneHandler {
 
         try{
             parseId = zoneData.get("parseId").toString();
-            userName = zoneData.get("username").toString();
+            userName = zoneData.get("userName").toString();
             name = zoneData.get("name").toString();
             type = zoneData.get("type").toString();
             auditId = (Long) zoneData.get("auditId");
@@ -84,10 +84,14 @@ public class ZoneHandler {
         ApiHandler.getParseObjects(zoneData, className, objectId);
     }
 
-    public static void updateZoneAtLocal(String objectId, String id) {
+    public static void updateZoneAtLocal(String objectId, String id, Boolean isResposne) {
         try{
             Zone zone = (Zone) (ZoneHandler.getZoneById(id)).get(0);
             zone.setParseId(objectId);
+            if (isResposne){
+                zone.setIsUpdated(false);
+            }
+
             zone.save();
         } catch (Exception e) {
             Log.e("ZoneHandler", "Exception occurred while updating zone data.", e);
@@ -175,7 +179,7 @@ public class ZoneHandler {
         try{
             JSONObject query = new JSONObject();
             JSONObject parameter = new JSONObject();
-            parameter.put("username", username);
+            parameter.put("userName", username);
             query.put("where", parameter);
             ApiHandler.getParseObjects(query, className, "");
 
@@ -194,15 +198,24 @@ public class ZoneHandler {
         }
 
         try {
-            zone.setUsername(jsonObject.get("username").toString());
+            zone.setUsername(jsonObject.get("userName").toString());
             zone.setParseId(jsonObject.get("objectId").toString());
-            zone.setId((Long) jsonObject.get("zoneId"));
-            zone.setAuditId((Long) jsonObject.get("auditId"));
+            zone.setId(Long.valueOf(jsonObject.get("id").toString()));
+            zone.setAuditId(Long.valueOf(jsonObject.get("auditId").toString()));
 
             zone.setName(jsonObject.get("name").toString());
             zone.setType(jsonObject.get("type").toString());
-            zone.setCreated((Date) jsonObject.get("created"));
-            zone.setUpdated((Date) jsonObject.get("updated"));
+            try{
+                zone.setCreated(new Date(jsonObject.get("created").toString()));
+            } catch (Exception e) {
+                zone.setCreated(new Date());
+            }
+            try {
+                zone.setUpdated(new Date(jsonObject.get("updated").toString()));
+            } catch (Exception e) {
+                zone.setUpdated(new Date());
+            }
+
             zone.save();
         } catch (Exception e) {
             System.out.println("Exception");
@@ -236,7 +249,7 @@ public class ZoneHandler {
     }
 
     private static JSONArray getAllRecentlyUpdatedZones() {
-        List<Zone> zones = Zone.find(Zone.class,"parse_id is not NULL and parse_id !='' and isUpdated=1","");
+        List<Zone> zones = Zone.find(Zone.class,"parse_id is not NULL and parse_id !='' and is_updated=1","");
         JSONArray zoneArray = new JSONArray();
         for(int i = 0;i<zones.size();i++)
         {

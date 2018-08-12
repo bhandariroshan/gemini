@@ -25,7 +25,7 @@ public class UserHandler {
     public UserHandler(String username, String password, String email,
                        String first_name, String last_name, String phone){
         try {
-            userData.put("username", username);
+            userData.put("userName", username);
             userData.put("password", password);
             userData.put("first_name", first_name);
             userData.put("email",email);
@@ -62,7 +62,7 @@ public class UserHandler {
         String phone="";
 
         try{
-            username = userData.get("username").toString();
+            username = userData.get("userName").toString();
             email = userData.get("email").toString();
             first_name = userData.get("first_name").toString();
             last_name = userData.get("last_name").toString();
@@ -83,7 +83,7 @@ public class UserHandler {
         return userData;
     }
 
-    private void createUserParse(){
+    public void createUserToParse(){
         ApiHandler.createParseObject(userData, userClassName);
     }
 
@@ -91,10 +91,14 @@ public class UserHandler {
         ApiHandler.getParseObjects(userData, userClassName, objectId);
     }
 
-    public static void updateLocalUser(String objectId, String username) {
+    public static void updateLocalUser(String objectId, String username, Boolean isResponse) {
         try{
             User user = (User) (UserHandler.getUserByUsername(username)).get(0);
             user.setParseid(objectId);
+            if (isResponse){
+                user.setIsUpdated(false);
+            }
+
             user.save();
         } catch (Exception e) {
             Log.e("UserHandler", "Exception occurred while updating user.", e);
@@ -121,7 +125,7 @@ public class UserHandler {
                 Log.e("UserHandler", "Exception occurred while creating json data.", e);
             }
         }
-        ApiHandler.doBatchOperation(data, userClassName, ApiHandler.getBatchOperationRequestMethod());
+        ApiHandler.doBatchOperation(data, userClassName, ApiHandler.getBatchOperationRequestMethod(), false);
     }
 
     public static JSONArray getUserByParseId(String parseid){
@@ -143,7 +147,7 @@ public class UserHandler {
     }
 
     public static JSONArray getUserByUsername(String username){
-        List<User> users = User.find(User.class,"username=?",username);
+        List<User> users = User.find(User.class,"user_Name=?",username);
         JSONArray userArray = new JSONArray();
         for(int i = 0;i<users.size();i++)
         {
@@ -163,7 +167,7 @@ public class UserHandler {
         try{
             JSONObject query = new JSONObject();
             JSONObject parameter = new JSONObject();
-            parameter.put("username", username);
+            parameter.put("userName", username);
             query.put("where", parameter);
             ApiHandler.getParseObjects(query, userClassName, "");
 
@@ -199,7 +203,7 @@ public class UserHandler {
         }
 
         try {
-            user.setUsername(userData.get("username").toString());
+            user.setUsername(userData.get("userName").toString());
             user.setParseid(userData.get("objectId").toString());
             user.setEmail(userData.get("email").toString());
             user.setLastName(userData.get("last_name").toString());

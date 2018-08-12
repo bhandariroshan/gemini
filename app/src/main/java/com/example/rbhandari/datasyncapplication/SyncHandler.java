@@ -25,8 +25,11 @@ public class SyncHandler extends AsyncTask<String,Void,String>{
 
         if (action.toLowerCase().equals("createbackuptoparse")){
             createBackupToParse();
-        } else {
+        } else if (action.toLowerCase().equals("createbackupfromparse")){
             loadBackupFromParse();
+        }
+        else if (action.toLowerCase().equals("backupallupdatestoparse")) {
+            saveAllUpdatesToParse();
         }
         return "";
     }

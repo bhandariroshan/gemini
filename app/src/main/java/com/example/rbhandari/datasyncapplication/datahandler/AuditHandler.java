@@ -33,7 +33,7 @@ public class AuditHandler {
             auditData.put("localUpdatedAt", updatedAt);
 
             auditData.put("userName", userName);
-            auditData.put("auditId", auditId);
+            auditData.put("id", auditId);
             auditData.put("parseId", parseId);
             auditData.put("name", name);
             auditData.put("isUpdated", isUpdated);
@@ -58,7 +58,6 @@ public class AuditHandler {
 
         try{
             userName = auditData.get("userName").toString();
-            auditId = (Long) auditData.get("auditId");
             parseId = auditData.get("parseId").toString();
             name = auditData.get("name").toString();
             createdAt = (Date) auditData.get("localCreatedAt");
@@ -80,10 +79,14 @@ public class AuditHandler {
         ApiHandler.getParseObjects(auditData, auditClassName, objectId);
     }
 
-    public static void updateLocalAudit(String objectId, Long auditId) {
+    public static void updateLocalAudit(String objectId, String auditId, Boolean isResponse) {
         try{
-            Audit audit = (Audit) (AuditHandler.getAuditByAuditId(auditId.toString())).get(0);
+            Audit audit = (Audit) (AuditHandler.getAuditByAuditId(auditId)).get(0);
             audit.setParseId(objectId);
+            if (isResponse){
+                audit.setIsUpdated(false);
+            }
+
             audit.save();
         } catch (Exception e) {
             Log.e("AuditHandler", "Exception occurred while creating updating data.", e);
@@ -172,7 +175,7 @@ public class AuditHandler {
         try{
             JSONObject query = new JSONObject();
             JSONObject parameter = new JSONObject();
-            parameter.put("username", username);
+            parameter.put("userName", username);
             query.put("where", parameter);
             ApiHandler.getParseObjects(query, auditClassName, "");
 
@@ -191,8 +194,8 @@ public class AuditHandler {
         }
 
         try {
-            audit.setId(Long.valueOf(jsonData.get("auditId").toString()));
-            audit.setUserName(jsonData.get("username").toString());
+            audit.setId(Long.valueOf(jsonData.get("id").toString()));
+            audit.setUserName(jsonData.get("userName").toString());
             audit.setName(jsonData.get("name").toString());
             audit.setParseId(jsonData.get("objectId").toString());
             audit.setCreated(new Date(jsonData.get("localCreatedAt").toString()));

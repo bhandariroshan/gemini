@@ -32,7 +32,7 @@ public class TypeHandler {
     public TypeHandler(String userName, String id, String parseId, Long zoneId, Long auditId, String name, String subType,
                        Date created, Date updated, Boolean isUpdated){
         try {
-            typeData.put("username", userName);
+            typeData.put("userName", userName);
             typeData.put("id", id);
             typeData.put("parseId",parseId);
             typeData.put("zoneId",zoneId);
@@ -89,10 +89,14 @@ public class TypeHandler {
         ApiHandler.getParseObjects(typeData, className, objectId);
     }
 
-    public static void updateTypeAtLocal(String objectId, String id) {
+    public static void updateTypeAtLocal(String objectId, String id, Boolean isResponse) {
         try{
             TypeClass type = (TypeClass) (TypeHandler.getTypeById(id)).get(0);
             type.setParseId(objectId);
+            if (isResponse){
+                type.setIsUpdated(false);
+            }
+
             type.save();
         } catch (Exception e) {
             System.out.println("Exception");
@@ -126,7 +130,7 @@ public class TypeHandler {
     }
 
     public static JSONArray getTypeByParseId(String parseid){
-        List<TypeClass> types = TypeClass.find(TypeClass.class,"parse_id=?",parseid);
+        List<TypeClass> types = TypeClass.find(TypeClass.class,"parse_Id=?",parseid);
         JSONArray typeArrray = new JSONArray();
         for(int i = 0;i<types.size();i++)
         {
@@ -160,7 +164,7 @@ public class TypeHandler {
     }
 
     private static JSONArray getAllRecentlyUpdatedTypes(){
-        List<TypeClass> types = TypeClass.find(TypeClass.class,"parse_id is not NULL and parse_id !='' and isUpdated=1","");
+        List<TypeClass> types = TypeClass.find(TypeClass.class,"parse_id is not NULL and parse_id !='' and is_updated=1","");
         JSONArray typeArray = new JSONArray();
         for(int i = 0;i<types.size();i++)
         {
@@ -197,7 +201,7 @@ public class TypeHandler {
         try{
             JSONObject query = new JSONObject();
             JSONObject parameter = new JSONObject();
-            parameter.put("username", username);
+            parameter.put("userName", username);
             query.put("where", parameter);
             ApiHandler.getParseObjects(query, className, "");
 
@@ -218,7 +222,7 @@ public class TypeHandler {
         try {
             typeClass.setAuditId(Long.valueOf(jsonData.get("auditId").toString()));
             typeClass.setParseId(jsonData.get("objectId").toString());
-            typeClass.setUserName(jsonData.get("username").toString());
+            typeClass.setUserName(jsonData.get("userName").toString());
             typeClass.setParseId(jsonData.get("objectId").toString());
             typeClass.setName(jsonData.get("name").toString());
             typeClass.setSubType(jsonData.get("subType").toString());

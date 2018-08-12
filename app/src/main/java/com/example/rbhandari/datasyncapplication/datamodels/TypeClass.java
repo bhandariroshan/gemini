@@ -34,7 +34,7 @@ public class TypeClass extends SugarRecord<TypeClass>{
         this.isUpdated=isUpdated;
     }
 
-    public void setUpdated(Boolean updated) {
+    public void setIsUpdated(Boolean updated) {
         this.isUpdated = updated;
     }
 

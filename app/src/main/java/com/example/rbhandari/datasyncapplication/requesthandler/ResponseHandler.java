@@ -56,32 +56,32 @@ public class ResponseHandler {
         try {
             newData.put("response", new JSONObject(responseData.get("response").toString()));
         } catch (Exception e) {
-            Log.e("ResponseHandler", "Error whilw parsing response", e);
+            Log.e("ResponseHandler", "Error while parsing response", e);
         }
         if (className.toLowerCase().equals("user")){
             String username="";
             String objectId = "";
             try{
-                username = requestData.get("username").toString();
+                username = requestData.get("userName").toString();
                 JSONObject response = (JSONObject) newData.get("response");
                 objectId = response.get("objectId").toString();
             } catch (Exception e){
                 Log.e("ResponseHandler", "Error in JSON value extraction", e);
             }
 
-            UserHandler.updateLocalUser(objectId, username);
+            UserHandler.updateLocalUser(objectId, username, true);
         }
 
         else if (className.toLowerCase().equals("auditmain")){
-            Long auditId;
+            String auditId;
             String objectId = "";
             try{
-                auditId = (Long) requestData.get("auditId");
+                auditId = requestData.get("auditId").toString();
 
                 JSONObject response = (JSONObject) responseData.get("response");
                 objectId = response.get("objectId").toString();
 
-                AuditHandler.updateLocalAudit(objectId, auditId);
+                AuditHandler.updateLocalAudit(objectId, auditId, true);
 
             } catch (Exception e){
                 Log.e("ResponseHandler", "Error in JSON value extraction", e);
@@ -95,7 +95,7 @@ public class ResponseHandler {
                 localId = requestData.get("id").toString();
                 JSONObject response = (JSONObject) newData.get("response");
                 objectId = response.get("objectId").toString();
-                ZoneHandler.updateZoneAtLocal(objectId, localId);
+                ZoneHandler.updateZoneAtLocal(objectId, localId, true);
             } catch (Exception e){
                 Log.e("ResponseHandler", "Error in JSON value extraction", e);
             }
@@ -108,7 +108,7 @@ public class ResponseHandler {
                 localId = requestData.get("id").toString();
                 JSONObject response = (JSONObject) newData.get("response");
                 objectId = response.get("objectId").toString();
-                TypeHandler.updateTypeAtLocal(objectId, localId);
+                TypeHandler.updateTypeAtLocal(objectId, localId, true);
             } catch (Exception e){
                 Log.e("ResponseHandler", "Error in JSON value extraction", e);
             }
@@ -121,7 +121,7 @@ public class ResponseHandler {
                 localId = requestData.get("id").toString();
                 JSONObject response = (JSONObject) newData.get("response");
                 objectId = response.get("objectId").toString();
-                FeatureHandler.updateFeatureAtLocal(objectId, localId);
+                FeatureHandler.updateFeatureAtLocal(objectId, localId, true);
             } catch (Exception e){
                 Log.e("ResponseHandler", "Error in JSON value extraction", e);
             }
@@ -135,13 +135,15 @@ public class ResponseHandler {
                 String localId = ((JSONObject) requestData.get(i)).get("id").toString();
                 String objectId =((JSONObject)((JSONObject) data.get(i)).get("success")).get("objectId").toString();
                 if (className.toLowerCase().equals("featuremain")){
-                    FeatureHandler.updateFeatureAtLocal(objectId, localId);
+                    FeatureHandler.updateFeatureAtLocal(objectId, localId, true);
+                } else if (className.toLowerCase().equals("auditmain")){
+                    AuditHandler.updateLocalAudit(objectId, localId, true);
                 } else if (className.toLowerCase().equals("typemain")){
-                    TypeHandler.updateTypeAtLocal(objectId, localId);
+                    TypeHandler.updateTypeAtLocal(objectId, localId, true);
                 } else if (className.toLowerCase().equals("zonemain")){
-                    ZoneHandler.updateZoneAtLocal(objectId, localId);
+                    ZoneHandler.updateZoneAtLocal(objectId, localId, true);
                 } else if (className.toLowerCase().equals("user")){
-                    UserHandler.updateLocalUser(objectId, localId);
+                    UserHandler.updateLocalUser(objectId, localId, true);
                 }
             }
         } catch (Exception e) {

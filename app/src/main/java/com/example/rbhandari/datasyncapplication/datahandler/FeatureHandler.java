@@ -20,7 +20,7 @@ public class FeatureHandler {
                           String belongsTo, String dataType,
                           String key, String valueString, Integer valueInt, Double valueDouble, Date created, Date updated, Boolean isUpdated){
         try {
-            featureData.put("username", username);
+            featureData.put("userName", username);
             featureData.put("id", id);
             featureData.put("parseId", parseId);
             featureData.put("auditId", auditId);
@@ -48,6 +48,7 @@ public class FeatureHandler {
     }
 
     public void createFeatureAtLocal(){
+        String id;
         String username;
         String parseId;
         Long zoneId;
@@ -65,7 +66,8 @@ public class FeatureHandler {
         Boolean isUpdated;
 
         try{
-            username = featureData.get("username").toString();
+            id = featureData.get("id").toString();
+            username = featureData.get("userName").toString();
             parseId = featureData.get("parseId").toString();
             zoneId = (Long) featureData.get("zoneId");
             auditId = (Long) featureData.get("auditId");
@@ -99,10 +101,13 @@ public class FeatureHandler {
         ApiHandler.getParseObjects(featureData, className, objectId);
     }
 
-    public static void updateFeatureAtLocal(String objectId, String id) {
+    public static void updateFeatureAtLocal(String objectId, String id, Boolean isResponse) {
         try{
             Feature feature = (Feature) (FeatureHandler.getFeatureById(id)).get(0);
             feature.setParseId(objectId);
+            if(isResponse){
+                feature.setIsUpdated(false);
+            }
             feature.save();
         } catch (Exception e) {
             System.out.println("Exception");
@@ -197,7 +202,7 @@ public class FeatureHandler {
         try{
             JSONObject query = new JSONObject();
             JSONObject parameter = new JSONObject();
-            parameter.put("username", username);
+            parameter.put("userName", username);
             query.put("where", parameter);
             ApiHandler.getParseObjects(query, className, "");
 
@@ -216,9 +221,10 @@ public class FeatureHandler {
         }
 
         try {
-            feature.setId(Long.valueOf(jsonData.get("auditId").toString()));
+            feature.setId(Long.valueOf(jsonData.get("id").toString()));
+            feature.setAuditId(Long.valueOf(jsonData.get("auditId").toString()));
             feature.setParseId(jsonData.get("objectId").toString());
-            feature.setUsername(jsonData.get("username").toString());
+            feature.setUsername(jsonData.get("userName").toString());
 
             feature.setFormId(Long.valueOf(jsonData.get("formId").toString()));
             feature.setZoneId(Long.valueOf(jsonData.get("zoneId").toString()));
@@ -253,7 +259,7 @@ public class FeatureHandler {
     }
 
     private static JSONArray getAllRecentlyUpdatedFeatures(){
-        List<Feature> features = Feature.find(Feature.class,"parse_id is not NULL and parse_id !='' and isUpdated=1","");
+        List<Feature> features = Feature.find(Feature.class,"parse_id is not NULL and parse_id !='' and is_updated=1","");
         JSONArray featureArray = new JSONArray();
         for(int i = 0;i<features.size();i++)
         {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class User extends SugarRecord<User> {
     private String parseid;
-    private String username;
+    private String userName;
     private String email;
     private String firstName;
     private String lastName;
@@ -22,7 +22,7 @@ public class User extends SugarRecord<User> {
     public User(String parseid, String username, String email,
                 String firstName, String lastName, String password, String phone){
         this.parseid = parseid;
-        this.username = username;
+        this.userName = username;
         this.email = email;
         this.firstName=firstName;
         this.lastName=lastName;
@@ -55,7 +55,7 @@ public class User extends SugarRecord<User> {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public String getParseId() {
@@ -83,7 +83,15 @@ public class User extends SugarRecord<User> {
     }
 
     public String getUsername() {
-        return username;
+        return userName;
+    }
+
+    public Boolean getUpdated() {
+        return isUpdated;
+    }
+
+    public void setIsUpdated(Boolean updated) {
+        this.isUpdated = updated;
     }
 }
 

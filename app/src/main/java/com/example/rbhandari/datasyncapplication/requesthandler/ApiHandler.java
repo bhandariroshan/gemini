@@ -210,12 +210,12 @@ public class ApiHandler {
         return returnData;
     }
 
-    public static void doBatchOperation(final JSONArray data, final String classname, String actionType, Boolean updateObject){
+    public static void doBatchOperation(final JSONArray data, final String classname, String actionType, Boolean isUpdate){
         JSONObject postData = ApiHandler.createBatchOperationData(
                 classname,
                 actionType,
                 data,
-                updateObject
+                isUpdate
         );
         String createUrl = parseApiRoot + bathOperationPath;
         try{
