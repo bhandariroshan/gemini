@@ -50,10 +50,11 @@ Following methods are available in the SyncHandler class:
     userHandler.createUserToParse();
 
   ``` 
- 
+
 - Creating Audit Locally
  
   ``` 
+    import com.example.rbhandari.datasyncapplication.datahandler.AuditHandler
     AuditHandler auditHandler = new AuditHandler(
       "roshanbhandari",
       Long.valueOf(1),
@@ -70,6 +71,7 @@ Following methods are available in the SyncHandler class:
 - Creating Zone Locally
   
   ``` 
+    import com.example.rbhandari.datasyncapplication.datahandler.ZoneHandler
     ZoneHandler zoneHandler = new ZoneHandler(
           "",
           "roshanbhandari",
@@ -84,7 +86,54 @@ Following methods are available in the SyncHandler class:
     zoneHandler.createLocalZone();
 
   ```
+ 
+- Creating Type Locally
   
+  ``` 
+    import com.example.rbhandari.datasyncapplication.datahandler.TypeHandler
+    TypeHandler typeHandler = new TypeHandler(
+            "roshanbhandari",
+            "",
+            "",
+            Long.valueOf(1),
+            Long.valueOf(1),
+            "name",
+            "subtype",
+            new Date(),
+            new Date(),
+            false
+    );
+    typeHandler.createTypeAtLocal();
+
+  ```
+ 
+- Creating Feature Locally
+  
+  ```
+  
+    import com.example.rbhandari.datasyncapplication.datahandler.FeatureHandler
+    FeatureHandler featureHandler = new FeatureHandler(
+        "roshanbhandari",
+        "",
+        "",
+        Long.valueOf(1),
+        Long.valueOf(1),
+        Long.valueOf(1),
+        Long.valueOf(1),
+        "roshan",
+        "Integer",
+        "Price",
+        "",
+        5,
+        Double.valueOf("1"),
+        new Date(),
+        new Date(),
+        false
+    );
+    featureHandler.createFeatureAtLocal();
+    
+  ```
+ 
 - createBackupToParse: This method saves all the newly created data in feature, type, audit and zone model to the parse server
 
   ``` 
