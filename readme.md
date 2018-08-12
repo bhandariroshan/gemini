@@ -26,38 +26,38 @@ We can directly use Synchandler class to sync data to and fro between android de
 Following methods are available in the SyncHandler class:
 
 - Creating User using UserHandler in Android
- ``` 
- 
- import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
- UserHandler userHandler = new UserHandler(
-        "roshanbhandari",
-        "password1234",
-        "brishi98@gmail.com",
-        "roshan",
-        "bhandari",
-        "9808166147"
-);
-userHandler.createLocalUser();
-        
- 
- ```
+
+  ``` 
+
+  import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
+  UserHandler userHandler = new UserHandler(
+      "roshanbhandari",
+      "password1234",
+      "brishi98@gmail.com",
+      "roshan",
+      "bhandari",
+      "9808166147"
+  );
+  userHandler.createLocalUser();
+
+  ```
  
 - Saving Locally created user to Parse
 
- ``` 
+  ``` 
 
-import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
-userHandler.createUserToParse();
+  import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
+  userHandler.createUserToParse();
 
- ``` 
+  ``` 
  
 - createBackupToParse: This method saves all the newly created data in feature, type, audit and zone model to the parse server
 
   ``` 
-  
+
   import com.example.rbhandari.datasyncapplication.SyncHandler
   SyncHandler.createBackupToParse() 
-  
+
   ``` 
 
 - loadBackupFromParse: This method can be used to created data in feature, type, audit and zone model from the data in parse server
@@ -65,17 +65,17 @@ userHandler.createUserToParse();
   ``` 
   import com.example.rbhandari.datasyncapplication.SyncHandler
   SyncHandler.loadBackupFromParse() 
-  
+
   ```
 
 
 - saveAllUpdatesToParse: This method can be used to save changes in feature, type, audit and zone model from the android database to the data in parse server
 
   ``` 
-  
+
   import com.example.rbhandari.datasyncapplication.SyncHandler
   SyncHandler.saveAllUpdatesToParse() 
-  
+
   ```
 
 
