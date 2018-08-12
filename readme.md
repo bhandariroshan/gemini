@@ -46,41 +46,42 @@ Following methods are available in the SyncHandler class:
 
   ``` 
 
-  import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
-  userHandler.createUserToParse();
+    import com.example.rbhandari.datasyncapplication.datahandler.UserHandler
+    userHandler.createUserToParse();
 
   ``` 
  
  - Creating Audit Locally
+ 
    ``` 
-  AuditHandler auditHandler = new AuditHandler(
-        "roshanbhandari",
-        Long.valueOf(1),
-        "",
-        "Audit ****",
-        new Date(),
-        new Date(),
-        false
-  );
-  auditHandler.createLocalAudit();
+    AuditHandler auditHandler = new AuditHandler(
+          "roshanbhandari",
+          Long.valueOf(1),
+          "",
+          "Audit ****",
+          new Date(),
+          new Date(),
+          false
+    );
+    auditHandler.createLocalAudit();
 
   ```
  
 - Creating Zone Locally
   
   ``` 
-  ZoneHandler zoneHandler = new ZoneHandler(
-          "",
-          "roshanbhandari",
-          "",
-          "zone 1",
-          "",
-          Long.valueOf(1),
-          new Date(),
-          new Date(),
-          false
-  );
-  zoneHandler.createLocalZone();
+    ZoneHandler zoneHandler = new ZoneHandler(
+            "",
+            "roshanbhandari",
+            "",
+            "zone 1",
+            "",
+            Long.valueOf(1),
+            new Date(),
+            new Date(),
+            false
+    );
+    zoneHandler.createLocalZone();
 
   ```
   
@@ -88,16 +89,16 @@ Following methods are available in the SyncHandler class:
 
   ``` 
 
-  import com.example.rbhandari.datasyncapplication.SyncHandler
-  SyncHandler.createBackupToParse() 
+    import com.example.rbhandari.datasyncapplication.SyncHandler
+    SyncHandler.createBackupToParse() 
 
   ``` 
 
 - loadBackupFromParse: This method can be used to created data in feature, type, audit and zone model from the data in parse server
 
   ``` 
-  import com.example.rbhandari.datasyncapplication.SyncHandler
-  SyncHandler.loadBackupFromParse() 
+    import com.example.rbhandari.datasyncapplication.SyncHandler
+    SyncHandler.loadBackupFromParse() 
 
   ```
 
@@ -105,9 +106,9 @@ Following methods are available in the SyncHandler class:
 - saveAllUpdatesToParse: This method can be used to save changes in feature, type, audit and zone model from the android database to the data in parse server
 
   ``` 
-
-  import com.example.rbhandari.datasyncapplication.SyncHandler
-  SyncHandler.saveAllUpdatesToParse() 
+  
+    import com.example.rbhandari.datasyncapplication.SyncHandler
+    SyncHandler.saveAllUpdatesToParse() 
 
   ```
 
