@@ -51,7 +51,7 @@ Following methods are available in the SyncHandler class:
 
   ``` 
  
- - Creating Audit Locally
+- Creating Audit Locally
  
   ``` 
     AuditHandler auditHandler = new AuditHandler(
